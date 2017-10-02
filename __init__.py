@@ -70,13 +70,10 @@ def main():
     myScreens = pygame.sprite.Group()
     characters = pygame.sprite.Group()
     boxes = pygame.sprite.Group()
-    # texts = pygame.sprite.Group()
     all = pygame.sprite.RenderUpdates()
-    #
+
     # assign default groups to each sprite class
     MyScreen.containers = myScreens, all
-    # SelectChar.containers = screens, all
-    # GameOver.containers = screens, all
     Character.containers = characters, all
     Box.containers = boxes, all
 
@@ -112,9 +109,6 @@ def main():
                 if GameData.animstep > 5:
                     GameData.animstep = 0
 
-            # clear/erase the last drawn sprites
-            all.clear(screen, activeScreen.image)
-
             # update all the sprites
             all.update()
 
@@ -137,54 +131,41 @@ def main():
         box_rect = Rect(550, 668, 300, 90)
         box = Box(box_rect)
 
+        # Create TextInput-object
+        textinput = TextInput()
+        textinput.set_text_color((255, 255, 255))
+
+        # character selection screen
+        GameData.gamestate = "character selection"
+        activeScreen.setImage('character_selection.png')
+
         char_name = ""
         waiting = True
         while waiting:
-            # # Create TextInput-object
-            # textinput = TextInput()
-            # textinput.set_text_color((255, 255, 255))
-            # events = pygame.event.get()
-            # # Feed it with events every frame
-            # textinput.update(events)
-            # screen.blit(textinput.get_surface(), (box_rect.x + 63, box_rect.y + 25))
-            # # draw the scene
-            # dirty = all.draw(screen)
-            # pygame.display.update(dirty)
-            # # cap the framerate
-            # clock.tick(40)
 
-            # character selection screen
-            GameData.gamestate = "character selection"
-            activeScreen.setImage('character_selection.png')
             screen.blit(activeScreen.image, activeScreen.rect)
-            myScreens.update()
-            # draw the scene
-            myScreens.draw(screen)
 
             collide_list = []
             for char in charList:
                 collide_list.append(screen.blit(char.image, char.rect))
                 if char.name == char_name:
                     screen.blit(Text.loadText(char.name, 'Comic Sans MS', 20, (134, 173, 154)),
-                            (char.rect.x + 80, char.rect.height + 130))
+                        (char.rect.x + 80, char.rect.height + 130))
                 else:
                     screen.blit(Text.loadText(char.name, 'Comic Sans MS', 20, (255, 255, 255)),
-                            (char.rect.x + 80, char.rect.height + 130))
-            characters.update()
-            characters.draw(screen)
+                        (char.rect.x + 80, char.rect.height + 130))
 
             screen.blit(box.image, box_rect)
-            boxes.update()
-            boxes.draw(screen)
 
-            textSurface = Text.loadText(char_name, 'Comic Sans MS', 20, (255, 255, 255))
+            textSurface = Text.loadText('Enter your nickname', 'Comic Sans MS', 20, (255, 255, 255))
             screen.blit(textSurface, (box_rect.x + 70, box_rect.y + 15))
 
-            pygame.display.update()
+            screen.blit(textinput.get_surface(), (box_rect.x + 70, box_rect.y + 50))
 
             mousestate = False
             # get input
-            for event in pygame.event.get():
+            events = pygame.event.get()
+            for event in events:
                 if event.type == MOUSEBUTTONDOWN:
                     mousestate = True
                     break
@@ -192,21 +173,26 @@ def main():
                         (event.type == KEYDOWN and event.key == K_ESCAPE):
                     break
 
+            # Feed it with events every frame
+            textinput.update(events)
+
             if mousestate:
                 mouse_pos = pygame.mouse.get_pos()
                 i = 0
                 for char in charList:
                     if collide_list[i].collidepoint(mouse_pos):
                         char_name = char.name
-                        payload = {'name': char.name}
-                        requests.post('https://team-b-api.herokuapp.com/api/user/', json=payload)
                         break
                     i += 1
 
             keystate = pygame.key.get_pressed()
             if keystate[K_RETURN] or keystate[K_KP_ENTER]:
-                waiting = False
-                # print(str(textinput.get_text().__len__()))
+                if char_name != '' and 2 < textinput.get_text().__len__() < 21:
+                    # payload = {'name': textinput.get_text(), }
+                    # requests.post('https://team-b-api.herokuapp.com/api/user/', json=payload)
+                    payload = {'userName': textinput.get_text(), 'characterName': char_name}
+                    requests.post('https://team-b-api.herokuapp.com/api/login/', json=payload)
+                    waiting = False
             step = step + 1
             if step > 4:
                 step = 0
@@ -217,31 +203,17 @@ def main():
             # update all the sprites
             all.update()
 
-            # draw the scene
-            dirty = all.draw(screen)
-            pygame.display.update(dirty)
+            pygame.display.update()
 
             # cap the framerate
             clock.tick(40)
 
-            # clear/erase the last drawn sprites
-            # all.clear(textSurface, (box_rect.x + 150, box_rect.y + 65))
-            # active_screen.update()
-            # # Feed it with events every frame
-            # # textinput.update(events)
-            # # draw the scene
-            # dirty = all.draw(textSurface)
-            # pygame.display.update(dirty)
-            # # cap the framerate
-            # clock.tick(40)
-
         for myScreen in myScreens:
             myScreen.kill()
 
-        GameData.gamestate = "gameover"
-        activeScreen = GameOver()
-        screen.blit(background, (0, 0))
-        pygame.display.flip()
+        # character selection screen
+        GameData.gamestate = "game over"
+        activeScreen.setImage('game_over.jpg')
 
         waiting = True
         while waiting:
@@ -259,13 +231,17 @@ def main():
                 GameData.animstep = GameData.animstep + 1
                 if GameData.animstep > 5:
                     GameData.animstep = 0
-            # clear/erase the last drawn sprites
-            all.clear(screen, background)
-            # draw the scene
-            dirty = all.draw(screen)
-            pygame.display.update(dirty)
+
+            # update all the sprites
+            all.update()
+
+            pygame.display.update()
+
             # cap the framerate
             clock.tick(40)
+
+        for myScreen in myScreens:
+            myScreen.kill()
 
 if __name__ == '__main__':
     main()
