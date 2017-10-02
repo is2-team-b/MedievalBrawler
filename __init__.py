@@ -41,10 +41,6 @@ def main():
     else:
         screen = pygame.display.set_mode(GameData.screenrect.size)
 
-    # splashScreen = MyScreen(Graphics.load_background('splash_screen_done.png'))
-    # selectCharScreen = MyScreen(Graphics.load_background('character_selection.png'))
-    # gameOverScreen = MyScreen(Graphics.load_background('game_over.jpg'))
-
     # Load images, assign to sprite classes (Linux/Unix filenames are case sensitive)
 
     # SplashScreen.image = Graphics.load_background('splash_screen_done.png')
@@ -141,6 +137,7 @@ def main():
 
         char_name = ""
         waiting = True
+        response = None
         while waiting:
 
             screen.blit(activeScreen.image, activeScreen.rect)
@@ -191,7 +188,7 @@ def main():
                     # payload = {'name': textinput.get_text(), }
                     # requests.post('https://team-b-api.herokuapp.com/api/user/', json=payload)
                     payload = {'userName': textinput.get_text(), 'characterName': char_name}
-                    requests.post('https://team-b-api.herokuapp.com/api/login/', json=payload)
+                    response = requests.post('https://team-b-api.herokuapp.com/api/login/', json=payload)
                     waiting = False
             step = step + 1
             if step > 4:
@@ -212,11 +209,14 @@ def main():
             myScreen.kill()
 
         # character selection screen
-        GameData.gamestate = "game over"
-        activeScreen.setImage('game_over.jpg')
+        GameData.gamestate = "in game"
+        activeScreen.setImage(response.json()['scenario'])
 
         waiting = True
         while waiting:
+
+            screen.blit(activeScreen.image, activeScreen.rect)
+
             # get input
             for event in pygame.event.get():
                 if event.type == QUIT or \
@@ -238,7 +238,7 @@ def main():
             pygame.display.update()
 
             # cap the framerate
-            clock.tick(40)
+            clock.tick(int(response.json()['difficulty']))
 
         for myScreen in myScreens:
             myScreen.kill()
