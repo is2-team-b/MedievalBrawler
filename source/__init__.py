@@ -3,7 +3,8 @@ from .GameOver import *
 from .Graphics import *
 from .SelectChar import *
 from .Sound import *
-from .SplashScreen import *
+from .MyScreen import *
 from .Character import *
 from .Box import *
 from .TextInput import *
+from .Text import *

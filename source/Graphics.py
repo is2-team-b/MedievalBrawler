@@ -48,5 +48,5 @@ def load_background(file, colorkey=-1):
 def load_backgrounds(*files):
     imgs = []
     for file in files:
-        imgs.append(load_image(file))
+        imgs.append(load_background(file))
     return imgs
