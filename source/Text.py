@@ -1,7 +1,9 @@
 import pygame
 
+
 class dummyText:
     def load(self): pass
+
 
 def loadText(text, fontName, fontSize, fontColor):
     try:

@@ -1,6 +1,7 @@
 import pygame
 from source import Graphics
 
+
 class Character(pygame.sprite.Sprite):
     # The character which the player will play with
     def __init__(self, name, image, rect):

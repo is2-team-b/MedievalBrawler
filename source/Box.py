@@ -1,6 +1,7 @@
 import pygame
 from source import Graphics
 
+
 class Box(pygame.sprite.Sprite):
     # Just a text box
     def __init__(self, rect):

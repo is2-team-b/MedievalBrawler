@@ -1,6 +1,7 @@
 import pygame
 from source import GameData
 
+
 #####################################################################
 class GameOver(pygame.sprite.Sprite):
     """Game Over screen"""

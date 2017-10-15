@@ -1,8 +1,10 @@
 import pygame
 import os.path
 
+
 class dummysound:
     def play(self): pass
+
 
 def load_sound(file):
     print('Loading sounds...can I get the mixer?')

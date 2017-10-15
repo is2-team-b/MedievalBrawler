@@ -1,6 +1,7 @@
 import pygame
 from source import GameData
 
+
 class SelectChar(pygame.sprite.Sprite):
     # The screen from which the player can start a new game
     def __init__(self):
