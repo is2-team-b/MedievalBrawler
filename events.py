@@ -164,6 +164,7 @@ class GUIChangeScreenRequest(Event):
 class GameSyncEvent(Event):
     """..."""
     def __init__(self, game):
+        Event.__init__(self)
         self.name = "Game Synched to Authoritative State"
         self.game = game
 

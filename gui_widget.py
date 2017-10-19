@@ -35,18 +35,6 @@ class Widget(pygame.sprite.Sprite):
         elif isinstance(event, events.GUIFocusThisWidgetEvent) \
           and self.focused:
             self.set_focus(0)
-
-
-class MyScreen(Widget):
-    # The screen from which the player can start a new game
-    def __init__(self, ev_manager, image, container=None):
-        Widget.__init__(self, ev_manager, container)
-        self.image = source.Graphics.load_background(image)
-        self.rect = self.image.get_rect(center=source.GameData.Game.get_instance().screenrect.center)
-
-    def set_image(self, image):
-        self.image = source.Graphics.load_background(image)
-        self.rect = self.image.get_rect(center=source.GameData.Game.get_instance().screenrect.center)
         
 
 # ------------------------------------------------------------------------------

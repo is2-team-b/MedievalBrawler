@@ -1,9 +1,13 @@
+import os.path
 import gui
 import events
 import pygame
 import models
 import screens
 import layered_group
+import splash_screen
+import select_charactor_screen
+import source
 from pygame.locals import *
 from weakref import WeakKeyDictionary
 
@@ -42,16 +46,16 @@ class EventManager:
             listener.notify(event)
 
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 class CPUSpinnerController:
     """..."""
     def __init__(self, ev_manager):
         self.ev_manager = ev_manager
-        self.ev_manager.RegisterListener( self )
+        self.ev_manager.register_listener(self)
 
         self.keepGoing = 1
 
-    #----------------------------------------------------------------------
+    # ----------------------------------------------------------------------
     def run(self):
         if not self.keepGoing:
             raise Exception('dead spinner')
@@ -59,11 +63,12 @@ class CPUSpinnerController:
             event = events.TickEvent()
             self.ev_manager.post(event)
 
-    #----------------------------------------------------------------------
+    # ----------------------------------------------------------------------
     def notify(self, event):
         if isinstance(event, events.QuitEvent):
             #this will stop the while loop from running
             self.keepGoing = 0
+
 
 class PygameMasterController:
     """..."""
@@ -71,30 +76,27 @@ class PygameMasterController:
         self.ev_manager = ev_manager
         self.ev_manager.register_listener(self)
 
-        #subcontrollers is an ordered list, the first controller in the
+        # subcontrollers is an ordered list, the first controller in the
         # list is the first to be offered an event
         self.subcontrollers = []
 
-        self.guiClasses = { 'splash': [gui.SimpleGUIController],
-                            'select_charactor': [gui.SimpleGUIController],
-                            'ingame': [gui.SimpleGUIController]
-                          }
+        self.gui_classes = { 'splash': [splash_screen.SplashGUIController],
+                            'select_charactor': [select_charactor_screen.SelectCharactorGUIController]}
         self.switch_controller('splash')
 
     # ----------------------------------------------------------------------
     def switch_controller(self, key):
 
-        if not self.guiClasses.has_key(key):
+        if key not in self.gui_classes:
             raise NotImplementedError
 
         self.subcontrollers = []
 
-        for contClass in self.guiClasses[key]:
+        for contClass in self.gui_classes[key]:
             new_controller = contClass(self.ev_manager)
             self.subcontrollers.append(new_controller)
 
-
-    #----------------------------------------------------------------------
+    # ----------------------------------------------------------------------
     def notify(self, incoming_event):
 
         if isinstance(incoming_event, events.TickEvent):
@@ -128,22 +130,46 @@ class PygameMasterView(EventManager):
         self.ev_manager = ev_manager
         self.ev_manager.register_listener( self )
     
+        # Initialize pygame
         pygame.init()
-        self.window = pygame.display.set_mode( (440,480) )
-        pygame.display.set_caption( 'Fool The Bar' )
-        self.background = pygame.Surface( self.window.get_size() )
-        self.background.fill( (0,0,0) )
-    
-        self.window.blit( self.background, (0,0) )
+        pygame.font.init()
+
+        if pygame.mixer and not pygame.mixer.get_init():
+            print('Warning, no sound')
+            pygame.mixer = None
+
+        self.clock = pygame.time.Clock()
+        self.screenrect = source.GameData.Game.get_instance().screenrect
+
+        screenmode = input('(1-2) ')
+        if screenmode == '1':
+            bestdepth = pygame.display.mode_ok(self.screenrect.size, pygame.FULLSCREEN, 32)
+            self.screen = pygame.display.set_mode(self.screenrect.size, pygame.FULLSCREEN,
+                                                       bestdepth)
+        else:
+            self.screen = pygame.display.set_mode(self.screenrect.size)
+
+        # decorate the game window
+        pygame.mouse.set_visible(1)
+
+        # create the background: tile the bgd image & draw the game maze
+        self.background = pygame.Surface(self.screenrect.size)
+        self.screen.blit(self.background, (0, 0))
         pygame.display.flip()
+
+        # load the sound effects
+        if pygame.mixer:
+            self.music = os.path.join('sound', 'lvl1_invincible.mp3')
+            pygame.mixer.music.load(self.music)
+            pygame.mixer.music.play(-1)
     
         self.dialog = None
     
         self.subviews = []
         self.sprite_group = layered_group.LayeredSpriteGroup()
     
-        self.guiClasses = {'splash': [screens.SplashGUIView], 'select_charactor': [screens.SelectCharactorGUIView],
-                           'ingame': [screens.InGameGUIView]}
+        self.gui_classes = {'splash': [splash_screen.SplashGUIView],
+                           'select_charactor': [select_charactor_screen.SelectCharactorGUIView]}
         # the subviews that make up the current screen.  In order from
         # bottom to top
         # self.subviews = []
@@ -163,41 +189,41 @@ class PygameMasterView(EventManager):
         if self.dialog:
             raise Exception('cannot switch view while dialog up')
 
-        if not self.guiClasses.has_key(key):
+        if key not in self.gui_classes:
             raise NotImplementedError('master view doesnt have key')
 
         for view in self.subviews:
             view.kill()
         self.subviews = []
 
-        self.sprite_group.empty()
+        # self.sprite_group.empty()
 
-        rect = pygame.Rect((0, 0), self.window.get_size())
+        rect = pygame.Rect((0, 0), self.screen.get_size())
 
         # construct the new master View
-        for viewClass in self.guiClasses[key]:
+        for viewClass in self.gui_classes[key]:
             if hasattr(viewClass, 'clipRect'):
                 rect = viewClass.clipRect
             view = viewClass(self, self.sprite_group, rect)
-            bgBlit = view.get_background_blit()
-            self.background.blit(bgBlit[0], bgBlit[1])
+            bg_blit = view.get_background_blit()
+            self.background.blit(bg_blit[0], bg_blit[1])
             self.subviews.append(view)
 
         # initial blit & flip of the newly constructed background
-        self.window.blit(self.background, (0, 0))
+        self.screen.blit(self.background, (0, 0))
         pygame.display.flip()
 
     # ----------------------------------------------------------------------
     def handle_tick(self):
-        # Clear, Update, and Draw Everything
-        self.sprite_group.clear(self.window, self.background)
+        # lear, Update, and Draw Everything
+        self.sprite_group.clear(self.screen, self.background)
 
         self.sprite_group.update()
 
-        dirtyRects = self.sprite_group.draw(self.window)
+        dirty_rects = self.sprite_group.draw(self.screen)
 
-        pygame.display.update(dirtyRects)
-
+        pygame.display.update(dirty_rects)
+        
     # ----------------------------------------------------------------------
     def notify(self, event):
         if isinstance(event, events.GUIChangeScreenRequest):

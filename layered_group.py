@@ -10,7 +10,7 @@ class LayeredSpriteGroup(RenderUpdates):
 
     def add_internal(self, sprite):
         # prevent duplication
-        if self.spritedict.has_key(sprite):
+        if sprite in self.spritedict:
             return
 
         RenderUpdates.add_internal(self, sprite)
@@ -44,22 +44,22 @@ class LayeredSpriteGroup(RenderUpdates):
            add sprite to group
 
            Add a sprite or sequence of sprites to a group."""
-        has = self.spritedict.has_key
+        has = sprite in self.spritedict
         if hasattr(sprite, '_spritegroup'):
             for sprite in sprite.sprites():
-                if not has(sprite):
+                if not has:
                     self.add_internal(sprite)
                     sprite.add_internal(self)
         else:
             try:
                 len(sprite)  # see if its a sequence
             except (TypeError, AttributeError):
-                if not has(sprite):
+                if not has:
                     self.add_internal(sprite)
                     sprite.add_internal(self)
             else:
                 for sprite in sprite:
-                    if not has(sprite):
+                    if not has:
                         self.add_internal(sprite)
                         sprite.add_internal(self)
 
