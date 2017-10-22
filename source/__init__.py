@@ -6,5 +6,6 @@ from .Sound import *
 from .MyScreen import *
 from .Character import *
 from .Box import *
+from .Flag import *
 from .TextInput import *
 from .Text import *

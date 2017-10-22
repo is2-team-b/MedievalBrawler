@@ -10,6 +10,7 @@ from source.MyScreen import MyScreen      # MyScreen class
 from source.Character import Character    # Character class
 from source.Box import Box
 from source import Text
+from source.Flag import Flag
 from source.TextInput import TextInput
 
 
@@ -39,6 +40,8 @@ class Game:
             cls.my_screens = None
             cls.boxes = None
             cls.characters = None
+            cls.player_character = None
+            cls.playable_characters = None
             cls.all = None
 
         return cls.instance
@@ -97,6 +100,8 @@ class StateInitSound(StateGame):
         self.game.clock = pygame.time.Clock()
 
         self.game.state = StateInitScreen(self.game)
+        # titulo ventana
+        pygame.display.set_caption("Medieval Brawler")
 
 
 class StateInitScreen(StateGame):
@@ -195,11 +200,14 @@ class StateSplashScreen(StateGame):
 
 class StateCharSelectionScreen(StateGame):
     def show_ingame_screen(self):
-        charList = [Character('Blue Crossbowman', 'blue_crossbowman.png', Rect(50, 100, 282, 440)),
-                    Character('Blue Mage', 'blue_mage.png', Rect(382, 100, 282, 449)),
-                    Character('Blue Sorcerer', 'blue_sorcerer.png', Rect(714, 100, 269, 500)),
-                    Character('Dark Archer', 'dark_archer.png', Rect(1033, 100, 282, 374))]
+        charList = [Character('Blue Crossbowman', 'blue_crossbowman.png', Rect(50, 100, 282, 440),
+                              'blue_crossbowman_top_down.png'),
+                    Character('Blue Mage', 'blue_mage.png', Rect(382, 100, 282, 449), 'blue_mage_top_down.png'),
+                    Character('Blue Sorcerer', 'blue_sorcerer.png', Rect(714, 100, 269, 500),
+                              'blue_sorcerer_top_down.png'),
+                    Character('Dark Archer', 'dark_archer.png', Rect(1033, 100, 282, 374), 'dark_archer_top_down.png')]
 
+        self.game.playable_characters = charList
         # Box
         box_rect = Rect(550, 668, 300, 90)
         box = Box(box_rect)
@@ -266,6 +274,7 @@ class StateCharSelectionScreen(StateGame):
                     # requests.post('https://team-b-api.herokuapp.com/api/user/', json=payload)
                     payload = {'userName': textinput.get_text(), 'characterName': char_name}
                     self.game.response = requests.post('https://team-b-api.herokuapp.com/api/login/', json=payload)
+                    self.game.player_character = char_name
                     waiting = False
             self.game.step = self.game.step + 1
             if self.game.step > 4:
@@ -289,24 +298,57 @@ class StateCharSelectionScreen(StateGame):
 
 
 class StateIngameScreen(StateGame):
-    def show_game_over_screen(self):
-        # character selection screen
+    def show_game_result_screen(self):
+        # ingame screen
         Game.get_instance().gamestate = "in game"
-        self.game.active_screen.setImage(self.game.response.json()['scenario'])
+        mapElegido = self.game.response.json()['scenario']
+        # mapElegido = "ocean_wall.png"
+
+        self.game.active_screen.setImage(mapElegido)
+
+        # get char elegido
+        playerCharacter = [char for char in self.game.playable_characters if char.name == self.game.player_character][0]
+
+        # mapElegido.posicionJugador busca setear la posicion inicial del jugador geteando un atributo establecido en el mapa a jugar
+        # Sin embargo response.json()['scenario'] solo trae el nombre en string, evaluar si se puede traer el objeto completo del mapa
+        # screen.blit(playerCharacter.imageGame, mapElegido.posicionJugador )
+        playerCharacter_rect = Rect(50, 150, 55, 160)
+
+        playerCharacter.rect = playerCharacter_rect
+
+        # banderas
+        flag_rect = Rect(600, 480, 630, 500)
+
+        banderaelegida = Flag(flag_rect)
 
         waiting = True
         while waiting:
 
+            # pintar fondo
             self.game.screen.blit(self.game.active_screen.image, self.game.active_screen.rect)
+
+            # pintar banderas
+            self.game.screen.blit(banderaelegida.image, banderaelegida.rect)
+
+            # pintar jugador
+            self.game.screen.blit(playerCharacter.imageGame, playerCharacter.rect)
 
             # get input
             for event in pygame.event.get():
                 if event.type == QUIT or \
                         (event.type == KEYDOWN and event.key == K_ESCAPE):
                     return
+
             keystate = pygame.key.get_pressed()
-            if keystate[K_RETURN] or keystate[K_KP_ENTER]:
+            if keystate[K_UP] or keystate[K_DOWN] or keystate[K_LEFT] or keystate[K_RIGHT]:
+                playerCharacter.move(keystate)
+
+            # logica cuando agarra la bandera
+            # player_flag_collide = pygame.sprite.collide_rect_ratio(0.5)
+            if pygame.sprite.collide_rect(playerCharacter, banderaelegida):
+                condicionVictoria = True
                 waiting = False
+
             self.game.step = self.game.step + 1
             if self.game.step > 4:
                 self.game.step = 0
@@ -317,7 +359,7 @@ class StateIngameScreen(StateGame):
             # update all the sprites
             self.game.all.update()
 
-            pygame.display.update()
+            pygame.display.flip()
 
             # cap the framerate
             self.game.clock.tick(int(self.game.response.json()['difficulty']))
@@ -325,7 +367,27 @@ class StateIngameScreen(StateGame):
         for myScreen in self.game.my_screens:
             myScreen.kill()
 
-        self.game.state = StateGameOverScreen(self.game)
+        if condicionVictoria:
+            self.game.active_screen.setImage('victory_screen.png')
+
+            self.game.screen.blit(self.game.active_screen.image, self.game.active_screen.rect)
+            self.game.all.update()
+
+            pygame.display.update()
+
+            self.game.state = StateVictoryScreen(self.game)
+        else:
+            self.game.state = StateGameOverScreen(self.game)
+
+class StateVictoryScreen(StateGame):
+    def show_splash_screen(self):
+        waiting = True
+        while waiting:
+            for event in pygame.event.get():
+                if event.type == QUIT or \
+                        (event.type == KEYDOWN and event.key == K_ESCAPE):
+                    return
+
 
 
 class StateGameOverScreen(StateGame):
