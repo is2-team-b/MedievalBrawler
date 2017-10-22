@@ -25,6 +25,7 @@ def main():
     source.GameData.Game.get_instance().state.show_ingame_screen()
     source.GameData.Game.get_instance().state.show_game_result_screen()
     source.GameData.Game.get_instance().state.show_splash_screen()
+    source.GameData.Game.get_instance().state.show_game_result_screen()
 
 
 if __name__ == '__main__':

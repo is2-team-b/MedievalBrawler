@@ -43,6 +43,7 @@ class Game:
             cls.player_character = None
             cls.playable_characters = None
             cls.all = None
+            cls.mapElegido = []
 
         return cls.instance
 
@@ -294,6 +295,8 @@ class StateCharSelectionScreen(StateGame):
         for myScreen in self.game.my_screens:
             myScreen.kill()
 
+        self.game.mapElegido.push(self.game.response.json()['scenario'])
+
         self.game.state = StateIngameScreen(self.game)
 
 
@@ -301,10 +304,11 @@ class StateIngameScreen(StateGame):
     def show_game_result_screen(self):
         # ingame screen
         Game.get_instance().gamestate = "in game"
-        mapElegido = self.game.response.json()['scenario']
-        # mapElegido = "ocean_wall.png"
 
-        self.game.active_screen.setImage(mapElegido)
+        # mapElegido = "ocean_wall.png"
+        print(self.game.mapElegido)
+
+        self.game.active_screen.setImage(self.game.mapElegido)
 
         # get char elegido
         playerCharacter = [char for char in self.game.playable_characters if char.name == self.game.player_character][0]
@@ -379,14 +383,30 @@ class StateIngameScreen(StateGame):
         else:
             self.game.state = StateGameOverScreen(self.game)
 
+
+
 class StateVictoryScreen(StateGame):
     def show_splash_screen(self):
         waiting = True
+
         while waiting:
+
             for event in pygame.event.get():
                 if event.type == QUIT or \
-                        (event.type == KEYDOWN and event.key == K_ESCAPE):
+                    (event.type == KEYDOWN and event.key == K_ESCAPE):
                     return
+        #Siguiente escenario
+            keystate = pygame.key.get_pressed()
+            if keystate[K_RETURN] or keystate[K_KP_ENTER]:
+                if self.game.mapElegido == "ocean_wall.png":
+                    self.game.mapElegido = "river.png"
+                    waiting=False
+                else:
+                    self.game.mapElegido = "ocean_wall.png"
+                    waiting = False
+        for myScreen in self.game.my_screens:
+            myScreen.kill()
+        self.game.state = StateIngameScreen(self.game)
 
 
 
