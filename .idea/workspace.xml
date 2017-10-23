@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="41fc90c6-6843-470b-ac19-bd2a83d6c740" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/__init__.py" afterPath="$PROJECT_DIR$/__init__.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/GameData.py" afterPath="$PROJECT_DIR$/source/GameData.py" />
     </list>
@@ -18,8 +17,8 @@
       <file leaf-file-name="GameData.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/source/GameData.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1495">
-              <caret line="297" column="72" lean-forward="false" selection-start-line="297" selection-start-column="72" selection-end-line="297" selection-end-column="72" />
+            <state relative-caret-position="358">
+              <caret line="433" column="64" lean-forward="true" selection-start-line="433" selection-start-column="64" selection-end-line="433" selection-end-column="64" />
               <folding>
                 <element signature="e#64#78#0" expanded="true" />
               </folding>
@@ -31,7 +30,7 @@
         <entry file="file://$PROJECT_DIR$/source/MyScreen.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <caret line="1" column="13" lean-forward="true" selection-start-line="1" selection-start-column="13" selection-end-line="1" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -40,8 +39,8 @@
       <file leaf-file-name="__init__.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/__init__.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="357">
-              <caret line="27" column="71" lean-forward="false" selection-start-line="27" selection-start-column="71" selection-end-line="27" selection-end-column="71" />
+            <state relative-caret-position="476">
+              <caret line="28" column="5" lean-forward="false" selection-start-line="28" selection-start-column="5" selection-end-line="28" selection-end-column="5" />
               <folding />
             </state>
           </provider>
@@ -148,7 +147,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
     <option name="width" value="1382" />
@@ -215,15 +214,15 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\Ivan\Documents\MyGame\MedievalBrawler\background" />
-      <recent name="C:\Users\Ivan\Documents\MyGame\MedievalBrawler\sprite" />
-      <recent name="C:\Users\Ivan\Documents\MyGame\MedievalBrawler\source" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Ivan\Documents\MyGame\MedievalBrawler\background" />
       <recent name="C:\Users\Ivan\Documents\MyGame\MedievalBrawler\source" />
       <recent name="C:\Users\Ivan\Documents\MyGame\MedievalBrawler\sprite" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Ivan\Documents\MyGame\MedievalBrawler\background" />
+      <recent name="C:\Users\Ivan\Documents\MyGame\MedievalBrawler\sprite" />
+      <recent name="C:\Users\Ivan\Documents\MyGame\MedievalBrawler\source" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -298,7 +297,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="784" extended-state="6" />
+    <frame x="-8" y="-8" width="1382" height="784" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14787701" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -465,6 +464,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="291">
           <caret line="23" column="48" lean-forward="true" selection-start-line="23" selection-start-column="48" selection-end-line="23" selection-end-column="48" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -494,6 +494,14 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/source/MyScreen.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="1" column="13" lean-forward="true" selection-start-line="1" selection-start-column="13" selection-end-line="1" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/source/Character.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
@@ -504,24 +512,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="27" column="71" lean-forward="false" selection-start-line="27" selection-start-column="71" selection-end-line="27" selection-end-column="71" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/source/MyScreen.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="476">
+          <caret line="28" column="5" lean-forward="false" selection-start-line="28" selection-start-column="5" selection-end-line="28" selection-end-column="5" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/source/GameData.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1495">
-          <caret line="297" column="72" lean-forward="false" selection-start-line="297" selection-start-column="72" selection-end-line="297" selection-end-column="72" />
+        <state relative-caret-position="358">
+          <caret line="433" column="64" lean-forward="true" selection-start-line="433" selection-start-column="64" selection-end-line="433" selection-end-column="64" />
           <folding>
             <element signature="e#64#78#0" expanded="true" />
           </folding>

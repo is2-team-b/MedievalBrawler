@@ -295,7 +295,7 @@ class StateCharSelectionScreen(StateGame):
         for myScreen in self.game.my_screens:
             myScreen.kill()
 
-        self.game.mapElegido.push(self.game.response.json()['scenario'])
+        self.game.mapElegido.append(self.game.response.json()['scenario'])
 
         self.game.state = StateIngameScreen(self.game)
 
@@ -305,10 +305,11 @@ class StateIngameScreen(StateGame):
         # ingame screen
         Game.get_instance().gamestate = "in game"
 
+        tamano=len(self.game.mapElegido)
         # mapElegido = "ocean_wall.png"
-        print(self.game.mapElegido)
+        #print(self.game.mapElegido[tamano-1])
 
-        self.game.active_screen.setImage(self.game.mapElegido)
+        self.game.active_screen.setImage(self.game.mapElegido[tamano-1])
 
         # get char elegido
         playerCharacter = [char for char in self.game.playable_characters if char.name == self.game.player_character][0]
@@ -336,6 +337,7 @@ class StateIngameScreen(StateGame):
 
             # pintar jugador
             self.game.screen.blit(playerCharacter.imageGame, playerCharacter.rect)
+            pygame.display.update()
 
             # get input
             for event in pygame.event.get():
@@ -372,14 +374,24 @@ class StateIngameScreen(StateGame):
             myScreen.kill()
 
         if condicionVictoria:
-            self.game.active_screen.setImage('victory_screen.png')
+            if tamano != 2:
+                self.game.active_screen.setImage('victory_screen.png')
 
-            self.game.screen.blit(self.game.active_screen.image, self.game.active_screen.rect)
-            self.game.all.update()
+                self.game.screen.blit(self.game.active_screen.image, self.game.active_screen.rect)
+                self.game.all.update()
 
-            pygame.display.update()
+                pygame.display.update()
 
-            self.game.state = StateVictoryScreen(self.game)
+                self.game.state = StateVictoryScreen(self.game)
+            else:
+                self.game.active_screen.setImage('game-completed.png')
+
+                self.game.screen.blit(self.game.active_screen.image, self.game.active_screen.rect)
+                self.game.all.update()
+
+                pygame.display.update()
+
+                self.game.state = StateGameOverScreen(self.game)
         else:
             self.game.state = StateGameOverScreen(self.game)
 
@@ -388,21 +400,22 @@ class StateIngameScreen(StateGame):
 class StateVictoryScreen(StateGame):
     def show_splash_screen(self):
         waiting = True
+        Game.get_instance().gamestate = "Victory"
 
         while waiting:
-
             for event in pygame.event.get():
                 if event.type == QUIT or \
                     (event.type == KEYDOWN and event.key == K_ESCAPE):
                     return
         #Siguiente escenario
             keystate = pygame.key.get_pressed()
+            tamano = len(self.game.mapElegido)
             if keystate[K_RETURN] or keystate[K_KP_ENTER]:
-                if self.game.mapElegido == "ocean_wall.png":
-                    self.game.mapElegido = "river.png"
+                if self.game.mapElegido[tamano-1] == "ocean_wall.png":
+                    self.game.mapElegido.append("river.png")
                     waiting=False
                 else:
-                    self.game.mapElegido = "ocean_wall.png"
+                    self.game.mapElegido.append("ocean_wall.png")
                     waiting = False
         for myScreen in self.game.my_screens:
             myScreen.kill()
@@ -411,4 +424,12 @@ class StateVictoryScreen(StateGame):
 
 
 class StateGameOverScreen(StateGame):
-    pass
+    def show_game_over_screen(self):
+        waiting = True
+        Game.get_instance().gamestate = "Game Over"
+
+        while waiting:
+            for event in pygame.event.get():
+                if event.type == QUIT or \
+                    (event.type == KEYDOWN and event.key == K_ESCAPE):
+                    return
