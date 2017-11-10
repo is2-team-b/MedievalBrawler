@@ -115,7 +115,6 @@ class StateInit(StateGame, Manager):
 class StateInitSound(StateGame, Manager):
     def __init__(self, game):
         StateGame.__init__(self, game)
-        self.game = game
 
     def init(self):
         if pygame.mixer and not pygame.mixer.get_init():
