@@ -12,7 +12,6 @@ import source
 
 
 def main():
-    source.GameData.Game.get_instance().state.init()
     source.GameData.Game.get_instance().state.init_sound()
     source.GameData.Game.get_instance().state.init_screen()
     source.GameData.Game.get_instance().state.load_sound()
