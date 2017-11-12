@@ -24,10 +24,15 @@ class Game:
 
             cls.instance = Game()
             cls.state = StateInit(cls.instance)
-            cls.screenrect = Rect(0, 0, 1366, 768)  # constant: complete window
-            cls.arenarect = Rect(0, 0, 1366, 768)  # constant: part of window to play in
+            cls.width = 1320
+            cls.height = 762
+            cls.screenrect = Rect(0, 0, cls.width, cls.height)  # constant: complete window
+            cls.arenarect = Rect(0, 0, cls.width, cls.height)  # constant: part of window to play in
             cls.animstep = 0  # variable: animation cycle
             cls.gamestate = "splash screen"            # variable
+            cls.tile_size = 30
+            cls.grid_width = cls.width / cls.tile_size
+            cls.grid_height = cls.height /cls.tile_size
 
             cls.screenmode = None
             cls.active_screen = None
@@ -429,6 +434,17 @@ class StateIngameScreen(StateGame, Manager):
     def first_render(self):
         # pintar fondo
         self.game.screen.blit(self.game.active_screen.image, self.game.active_screen.rect)
+
+        # drawGrid
+
+        self.lol1 = []
+        self.lol2 = []
+
+        for x in range(0, self.game.width, self.game.tile_size):
+            self.lol1.append(pygame.draw.line(self.game.screen, (0, 0, 0), (x, 0), (x, self.game.height)))
+
+        for y in range(0, self.game.height, self.game.tile_size):
+            self.lol2.append(pygame.draw.line(self.game.screen, (0, 0, 0), (0, y), (self.game.width, y)))
 
         # pintar banderas
         self.game.screen.blit(self.banderaelegida.image, self.banderaelegida.rect)
