@@ -43,7 +43,7 @@ class Character(pygame.sprite.Sprite):
                 #         self.speed = [-1, 0]
                 # self.speed = [1, 0]
                 self.speed = [-self.speed[0], -self.speed[1]]
-        elif keyPress[pygame.K_DOWN] and self.rect.bottom + 20 < GameData.Game.get_instance().arenarect.height:
+        elif keyPress[pygame.K_DOWN] and self.rect.bottom + 10 < GameData.Game.get_instance().arenarect.height:
             if not self.collide_with_obstacles():
                 self.speed = [0, 5]
             else:
@@ -56,7 +56,7 @@ class Character(pygame.sprite.Sprite):
                 #         self.speed = [0, -1]
                 # self.speed = [0, 1]
                 self.speed = [-self.speed[0], -self.speed[1]]
-        elif keyPress[pygame.K_UP] and self.rect.top + 20 > 0:
+        elif keyPress[pygame.K_UP] and self.rect.top - 7 > 0:
             if not self.collide_with_obstacles():
                 self.speed = [0, -5]
             else:

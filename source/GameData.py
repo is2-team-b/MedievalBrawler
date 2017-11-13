@@ -404,8 +404,7 @@ class StateCharSelectionScreen(StateGame, Manager):
             myScreen.kill()
 
         self.game.response = response
-        # self.game.mapElegido.append(self.game.response.json()['scenario'])
-        self.game.mapElegido.append("river.png")
+        self.game.mapElegido.append(self.game.response.json()['scenario'])
 
         self.game.state = StateIngameScreen(self.game)
 
@@ -425,19 +424,19 @@ class StateIngameScreen(StateGame, Manager):
         Game.get_instance().gamestate = "in game"
 
         self.tamano = len(self.game.mapElegido)
-        # mapElegido = "ocean_wall.png"
-        # print(self.game.mapElegido[tamano-1])
 
         self.game.active_screen.setImage(self.game.mapElegido[self.tamano - 1])
 
         # get char elegido
         self.playerCharacter = [char for char in self.game.playable_characters if char.name == self.game.player_character][0]
 
-        # mapElegido.posicionJugador busca setear la posicion inicial del jugador geteando un atributo establecido en el mapa a jugar
-        # Sin embargo response.json()['scenario'] solo trae el nombre en string, evaluar si se puede traer el objeto completo del mapa
-        # screen.blit(playerCharacter.imageGame, mapElegido.posicionJugador )
 
-        self.playerCharacter_rect = Rect(50, 150, 60, 40)
+        # get mapa elegido
+        mapas = MapManager()
+
+        self.game.battleground = [mapa for mapa in mapas.maps if mapa.background == self.game.mapElegido[self.tamano - 1]][0]
+
+        self.playerCharacter_rect = Rect(self.game.battleground.respawnpoints[0],self.game.battleground.respawnpoints[1], 60, 40)
 
         self.playerCharacter.rect = self.playerCharacter_rect
 
@@ -447,10 +446,6 @@ class StateIngameScreen(StateGame, Manager):
         self.banderaelegida = Flag(flag_rect)
 
     def first_render(self):
-        mapas = MapManager()
-        # getear mapa elegido
-
-        self.game.battleground = [mapa for mapa in mapas.maps if mapa.background == self.game.mapElegido[self.tamano - 1]][0]
 
         # pintar fondo
         self.game.screen.blit(self.game.active_screen.image, self.game.active_screen.rect)
@@ -468,17 +463,6 @@ class StateIngameScreen(StateGame, Manager):
             pygame.draw.rect(self.game.screen, (33, 33, 33), pool, 0)
 
         self.game.screen.blit(self.game.active_screen.image, self.game.active_screen.rect)
-
-        # drawGrid
-        self.lol1 = []
-        self.lol2 = []
-
-        for x in range(0, self.game.width, self.game.tile_size):
-            self.lol1.append(pygame.draw.line(self.game.screen, (0, 0, 0), (x, 0), (x, self.game.height)))
-
-        for y in range(0, self.game.height, self.game.tile_size):
-            self.lol2.append(pygame.draw.line(self.game.screen, (0, 0, 0), (0, y), (self.game.width, y)))
-
 
         # pintar banderas
         self.game.screen.blit(self.banderaelegida.image, self.banderaelegida.rect)
