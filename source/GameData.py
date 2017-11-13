@@ -427,12 +427,12 @@ class StateIngameScreen(StateGame, Manager):
         # Sin embargo response.json()['scenario'] solo trae el nombre en string, evaluar si se puede traer el objeto completo del mapa
         # screen.blit(playerCharacter.imageGame, mapElegido.posicionJugador )
 
-        self.playerCharacter_rect = Rect(50, 150, 55, 160)
+        self.playerCharacter_rect = Rect(50, 150, 60, 40)
 
         self.playerCharacter.rect = self.playerCharacter_rect
 
         # banderas
-        flag_rect = Rect(600, 480, 630, 500)
+        flag_rect = Rect(1120, 370, 30, 77)
 
         self.banderaelegida = Flag(flag_rect)
 
@@ -457,6 +457,8 @@ class StateIngameScreen(StateGame, Manager):
         for pool in self.game.battleground.water:
             pygame.draw.rect(self.game.screen, (33, 33, 33), pool, 0)
 
+        self.game.screen.blit(self.game.active_screen.image, self.game.active_screen.rect)
+
         # drawGrid
         self.lol1 = []
         self.lol2 = []
@@ -467,13 +469,14 @@ class StateIngameScreen(StateGame, Manager):
         for y in range(0, self.game.height, self.game.tile_size):
             self.lol2.append(pygame.draw.line(self.game.screen, (0, 0, 0), (0, y), (self.game.width, y)))
 
+
         # pintar banderas
         self.game.screen.blit(self.banderaelegida.image, self.banderaelegida.rect)
 
         # pintar jugador
         self.game.screen.blit(self.playerCharacter.imageGame, self.playerCharacter.rect)
 
-        # self.game.screen.blit(self.game.active_screen.image, self.game.active_screen.rect)
+
         pygame.display.update()
 
     def listen_events(self):

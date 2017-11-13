@@ -1,6 +1,7 @@
 import pygame
 from source import Graphics
 from source import GameData
+from source.Map import *
 
 class Character(pygame.sprite.Sprite):
     # The character which the player will play with
@@ -16,17 +17,70 @@ class Character(pygame.sprite.Sprite):
         self.speed = [0, 0]
 
     def move(self, keyPress):
-        # Buscar si se presionó flecha izquierda.
+        # if not self.collide_with_obstacles():
         if keyPress[pygame.K_LEFT] and self.rect.left > 0:
-            self.speed = [-5, 0]
-        # Si se presionó flecha derecha.
+            if not self.collide_with_obstacles():
+                self.speed = [-5, 0]
+            else:
+                # for wall in GameData.Game.get_instance().battleground.walls:
+                #     if wall.collidepoint(self.rect.left, self.rect.top):
+                #         self.speed = [1, 0]
+                #     elif wall.collidepoint(self.rect.left, self.rect.bottom):
+                #         self.speed = [1, 0]
+                #     elif wall.collidepoint(self.rect.left, self.rect.centery):
+                #         self.speed = [1, 0]
+                self.speed = [-self.speed[0],-self.speed[1]]
         elif keyPress[pygame.K_RIGHT] and self.rect.right < GameData.Game.get_instance().arenarect.width:
-            self.speed = [5, 0]
-        elif keyPress[pygame.K_DOWN] and self.rect.height < GameData.Game.get_instance().arenarect.height:
-            self.speed = [0, 5]
-        elif keyPress[pygame.K_UP] and self.rect.height > 0:
-            self.speed = [0, -5]
+            if not self.collide_with_obstacles():
+                self.speed = [5, 0]
+            else:
+                # for wall in GameData.Game.get_instance().battleground.walls:
+                #     if wall.collidepoint(self.rect.right, self.rect.top):
+                #         self.speed = [-1, 0]
+                #     elif wall.collidepoint(self.rect.right, self.rect.bottom):
+                #         self.speed = [-1, 0]
+                #     elif wall.collidepoint(self.rect.right, self.rect.centery):
+                #         self.speed = [-1, 0]
+                # self.speed = [1, 0]
+                self.speed = [-self.speed[0], -self.speed[1]]
+        elif keyPress[pygame.K_DOWN] and self.rect.bottom + 20 < GameData.Game.get_instance().arenarect.height:
+            if not self.collide_with_obstacles():
+                self.speed = [0, 5]
+            else:
+                # for wall in GameData.Game.get_instance().battleground.walls:
+                #     if wall.collidepoint(self.rect.left, self.rect.bottom):
+                #         self.speed = [0, -1]
+                #     elif wall.collidepoint(self.rect.right, self.rect.bottom):
+                #         self.speed = [0, -1]
+                #     elif wall.collidepoint(self.rect.centerx, self.rect.bottom):
+                #         self.speed = [0, -1]
+                # self.speed = [0, 1]
+                self.speed = [-self.speed[0], -self.speed[1]]
+        elif keyPress[pygame.K_UP] and self.rect.top + 20 > 0:
+            if not self.collide_with_obstacles():
+                self.speed = [0, -5]
+            else:
+                # for wall in GameData.Game.get_instance().battleground.walls:
+                #     if wall.collidepoint(self.rect.left, self.rect.top):
+                #         self.speed = [0, 1]
+                #     elif wall.collidepoint(self.rect.right, self.rect.top):
+                #         self.speed = [0, 1]
+                #     elif wall.collidepoint(self.rect.centerx, self.rect.top):
+                #         self.speed = [0, 1]
+                # self.speed = [0, -1]
+                self.speed = [-self.speed[0], -self.speed[1]]
         else:
             self.speed = [0, 0]
+
         # Mover en base a posición actual y velocidad.
         self.rect.move_ip(self.speed)
+
+    def collide_with_obstacles(self):
+        for wall in GameData.Game.get_instance().battleground.walls:
+            if wall.colliderect(self.rect):
+                return True
+        for pool in GameData.Game.get_instance().battleground.water:
+            if pool.colliderect(self.rect):
+                return True
+        return False
+
