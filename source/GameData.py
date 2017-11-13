@@ -4,7 +4,8 @@ import os.path
 
 import pygame
 from pygame.locals import *
-import requests
+import curio
+import asks
 
 from source.MyScreen import MyScreen      # MyScreen class
 from source.Character import Character    # Character class
@@ -312,6 +313,9 @@ class StateCharSelectionScreen(StateGame, Manager):
         self.char_name = ""
         self.game.response = None
 
+        # Init curio
+        asks.init('curio')
+
     def first_render(self):
         self.game.screen.blit(self.game.active_screen.image, self.game.active_screen.rect)
 
@@ -359,11 +363,6 @@ class StateCharSelectionScreen(StateGame, Manager):
         keystate = pygame.key.get_pressed()
         if keystate[K_RETURN] or keystate[K_KP_ENTER]:
             if self.char_name != '' and 2 < self.textinput.get_text().__len__() < 21:
-                # payload = {'name': textinput.get_text(), }
-                # requests.post('https://team-b-api.herokuapp.com/api/user/', json=payload)
-                payload = {'userName': self.textinput.get_text(), 'characterName': self.char_name}
-                self.game.response = requests.post('https://team-b-api.herokuapp.com/api/login/', json=payload)
-                self.game.player_character = self.char_name
                 self.waiting = False
         self.game.step = self.game.step + 1
         if self.game.step > 4:
@@ -391,9 +390,20 @@ class StateCharSelectionScreen(StateGame, Manager):
             self.process_logic()
             self.render_update()
 
+        curio.run(self.fetch())
+
+    async def fetch(self):
+        self.game.player_character = self.char_name
+        dict_to_send = {'userName': self.textinput.get_text(), 'characterName': self.char_name}
+        task = await curio.spawn(asks.post('https://team-b-api.herokuapp.com/api/login/',
+                                           json=dict_to_send, timeout=1))
+        await self.on_response_received(await task.join())
+
+    async def on_response_received(self, response):
         for myScreen in self.game.my_screens:
             myScreen.kill()
 
+        self.game.response = response
         # self.game.mapElegido.append(self.game.response.json()['scenario'])
         self.game.mapElegido.append("river.png")
 
