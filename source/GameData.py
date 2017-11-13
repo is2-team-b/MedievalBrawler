@@ -12,6 +12,7 @@ from source.Box import Box
 from source import Text
 from source.Flag import Flag
 from source.TextInput import TextInput
+from source.Map import *
 
 
 class Game:
@@ -34,6 +35,7 @@ class Game:
             cls.grid_width = cls.width / cls.tile_size
             cls.grid_height = cls.height /cls.tile_size
 
+            cls.battleground = None
             cls.screenmode = None
             cls.active_screen = None
             cls.response = None
@@ -157,7 +159,8 @@ class StateInitScreen(StateGame, Manager):
         pygame.mouse.set_visible(1)
 
         # create the background: tile the bgd image & draw the game maze
-        self.game.background = pygame.Surface(Game.get_instance().screenrect.size)
+        # self.game.background = pygame.Surface(Game.get_instance().screenrect.size)
+        self.game.background = pygame.Surface(self.game.screenrect.size)
         self.game.screen.blit(self.game.background, (0, 0))
         pygame.display.flip()
 
@@ -222,6 +225,7 @@ class StateSplashScreen(StateGame, Manager):
         self.waiting = None
 
     def init(self):
+
         # splash screen
         Game.get_instance().gamestate = "splash screen"
         self.game.active_screen = MyScreen('splash_screen_done.png')
@@ -390,7 +394,8 @@ class StateCharSelectionScreen(StateGame, Manager):
         for myScreen in self.game.my_screens:
             myScreen.kill()
 
-        self.game.mapElegido.append(self.game.response.json()['scenario'])
+        # self.game.mapElegido.append(self.game.response.json()['scenario'])
+        self.game.mapElegido.append("river.png")
 
         self.game.state = StateIngameScreen(self.game)
 
@@ -432,11 +437,27 @@ class StateIngameScreen(StateGame, Manager):
         self.banderaelegida = Flag(flag_rect)
 
     def first_render(self):
+        mapas = MapManager()
+        # getear mapa elegido
+
+        self.game.battleground = [mapa for mapa in mapas.maps if mapa.background == self.game.mapElegido[self.tamano - 1]][0]
+
         # pintar fondo
         self.game.screen.blit(self.game.active_screen.image, self.game.active_screen.rect)
 
-        # drawGrid
+        # for x in range(0, self.game.screenrect.width, bgdtile.get_width()):
+        #     background.blit(bgdtile, (x, 0))
 
+        self.game.background = pygame.Surface(Game.get_instance().screenrect.size)
+        # setear paredes
+
+        for wall in self.game.battleground.walls:
+            pygame.draw.rect(self.game.screen, (33, 33, 33), wall, 0)
+
+        for pool in self.game.battleground.water:
+            pygame.draw.rect(self.game.screen, (33, 33, 33), pool, 0)
+
+        # drawGrid
         self.lol1 = []
         self.lol2 = []
 
@@ -451,6 +472,8 @@ class StateIngameScreen(StateGame, Manager):
 
         # pintar jugador
         self.game.screen.blit(self.playerCharacter.imageGame, self.playerCharacter.rect)
+
+        # self.game.screen.blit(self.game.active_screen.image, self.game.active_screen.rect)
         pygame.display.update()
 
     def listen_events(self):
