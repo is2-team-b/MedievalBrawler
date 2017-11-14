@@ -53,6 +53,7 @@ class Game:
             cls.playable_characters = None
             cls.all = None
             cls.mapElegido = []
+            cls.index = None
 
         return cls.instance
 
@@ -83,6 +84,12 @@ class StateGame:
         pass
 
     def show_ingame_screen(self):
+        pass
+
+    def show_stage_result_screen(self):
+        pass
+
+    def show_match_completed_screen(self):
         pass
 
     def show_game_over_screen(self):
@@ -403,8 +410,9 @@ class StateCharSelectionScreen(StateGame, Manager):
         for myScreen in self.game.my_screens:
             myScreen.kill()
 
+        self.game.index = 0
         self.game.response = response
-        self.game.mapElegido.append(self.game.response.json()['scenario'])
+        # self.game.mapElegido.append(self.game.response.json()['stages'][self.game.index]['scenario'])
 
         self.game.state = StateIngameScreen(self.game)
 
@@ -418,14 +426,16 @@ class StateIngameScreen(StateGame, Manager):
         self.banderaelegida = None
         self.waiting = None
         self.condicionVictoria = None
+        self.payload_to_send = None
+        self.stages_to_send = None
 
     def init(self):
         # ingame screen
         Game.get_instance().gamestate = "in game"
 
-        self.tamano = len(self.game.mapElegido)
+        # self.tamano = len(self.game.mapElegido)
 
-        self.game.active_screen.setImage(self.game.mapElegido[self.tamano - 1])
+        self.game.active_screen.setImage(self.game.response.json()['stages'][self.game.index]['scenario'])
 
         # get char elegido
         self.playerCharacter = [char for char in self.game.playable_characters if char.name == self.game.player_character][0]
@@ -434,7 +444,7 @@ class StateIngameScreen(StateGame, Manager):
         # get mapa elegido
         mapas = MapManager()
 
-        self.game.battleground = [mapa for mapa in mapas.maps if mapa.background == self.game.mapElegido[self.tamano - 1]][0]
+        self.game.battleground = [mapa for mapa in mapas.maps if mapa.background == self.game.mapElegido[self.game.index]][0]
 
         self.playerCharacter_rect = Rect(self.game.battleground.respawnpoints[0],self.game.battleground.respawnpoints[1], 60, 40)
 
@@ -505,9 +515,9 @@ class StateIngameScreen(StateGame, Manager):
         pygame.display.flip()
 
         # cap the framerate
-        self.game.clock.tick(int(self.game.response.json()['difficulty']))
+        self.game.clock.tick(int(self.game.response.json()['stages'][self.game.index]['difficulty']))
 
-    def show_game_result_screen(self):
+    def show_stage_result_screen(self):
         self.init()
 
         self.waiting = True
@@ -517,28 +527,51 @@ class StateIngameScreen(StateGame, Manager):
             self.process_logic()
             self.render_update()
 
+        self.stages_to_send = self.stages_to_send if self.stages_to_send is not None else []
+
+        if self.condicionVictoria:
+            self.stages_to_send.append(
+                self.get_stage_payload(self.game.response.json(), self.game.index, 'win', 'completed'))
+            self.game.index += 1
+            if self.game.index < 2:
+                self.game.state = StateVictoryScreen(self.game)
+            else:
+                curio.run(self.fetch('win', 'completed'))
+        else:
+            self.stages_to_send.append(
+                self.get_stage_payload(self.game.response.json(), self.game.index, 'loss', 'completed'))
+            curio.run(self.fetch('loss', 'completed' if self.game.index > 1 else 'incompleted'))
+
+
+
+    async def fetch(self, result, status):
+        dict_to_send = self.get_user_payload(self.game.response.json(), result, status)
+        task = await curio.spawn(asks.put('https://team-b-api.herokuapp.com/api/login/',
+                                           json=dict_to_send, timeout=1))
+        map(lambda x: self.on_response_received(), await task.join())
+
+    def get_user_payload(self, json_match, result, status):
+        return {'userId': json_match['userId'],
+                'match': self.get_match_payload(json_match, result, status)}
+
+    def get_match_payload(self, json_match, result, status):
+        return {'id': json_match['id'],
+                'result': result,
+                'status': status,
+                'stages': self.stages_to_send}
+
+    def get_stage_payload(self, json_match, index, result, status):
+        return {'id': json_match['stages'][index],
+                'result': result,
+                'status': status}
+
+    async def on_response_received(self):
         for myScreen in self.game.my_screens:
             myScreen.kill()
 
         if self.condicionVictoria:
-            if self.tamano != 2:
-                self.game.active_screen.setImage('victory_screen.png')
-
-                self.game.screen.blit(self.game.active_screen.image, self.game.active_screen.rect)
-                self.game.all.update()
-
-                pygame.display.update()
-
-                self.game.state = StateVictoryScreen(self.game)
-            else:
-                self.game.active_screen.setImage('game-completed.png')
-
-                self.game.screen.blit(self.game.active_screen.image, self.game.active_screen.rect)
-                self.game.all.update()
-
-                pygame.display.update()
-
-                self.game.state = StateGameOverScreen(self.game)
+            if self.game.index > 1:
+                self.game.state = StateMatchCompletedScreen(self.game)
         else:
             self.game.state = StateGameOverScreen(self.game)
 
@@ -549,8 +582,15 @@ class StateVictoryScreen(StateGame, Manager):
         self.waiting = None
 
     def init(self):
-        self.waiting = True
+        # Victory screen
         Game.get_instance().gamestate = "Victory"
+        self.game.active_screen.setImage(self.game.response.json()['stages'][self.game.index]['scenario'])
+        self.game.screen.blit(self.game.active_screen.image, self.game.active_screen.rect)
+
+        # update all the sprites
+        self.game.all.update()
+
+        pygame.display.update()
 
     def listen_events(self):
         for event in pygame.event.get():
@@ -561,25 +601,65 @@ class StateVictoryScreen(StateGame, Manager):
     def process_logic(self):
         # Siguiente escenario
         keystate = pygame.key.get_pressed()
-        tamano = len(self.game.mapElegido)
+        # tamano = len(self.game.mapElegido)
         if keystate[K_RETURN] or keystate[K_KP_ENTER]:
-            if self.game.mapElegido[tamano - 1] == "ocean_wall.png":
-                self.game.mapElegido.append("river.png")
-                self.waiting = False
-            else:
-                self.game.mapElegido.append("ocean_wall.png")
-                self.waiting = False
+            self.waiting = False
 
-    def show_splash_screen(self):
+    def show_ingame_screen(self):
         self.init()
+
+        self.waiting = True
         while self.waiting:
             if self.listen_events() is False: return
             self.process_logic()
+
+        # if self.game.mapElegido[tamano - 1] == "ocean_wall.png":
+        #     self.game.mapElegido.append("river.png")
+        # else:
+        #     self.game.mapElegido.append("ocean_wall.png")
 
         for myScreen in self.game.my_screens:
             myScreen.kill()
 
         self.game.state = StateIngameScreen(self.game)
+
+
+class StateMatchCompletedScreen(StateGame, Manager):
+    def __init__(self, game):
+        StateGame.__init__(self, game)
+        self.waiting = None
+
+    def init(self):
+        # Match cleared screen
+        Game.get_instance().gamestate = "Match cleared"
+        self.game.active_screen.setImage('game-completed.png')
+        self.game.screen.blit(self.game.active_screen.image, self.game.active_screen.rect)
+
+        # update all the sprites
+        self.game.all.update()
+
+        pygame.display.update()
+
+    def listen_events(self):
+        for event in pygame.event.get():
+            if event.type == QUIT or \
+                    (event.type == KEYDOWN and event.key == K_ESCAPE):
+                return False
+
+    def show_match_completed_screen(self):
+        self.init()
+
+        self.waiting = True
+        while self.waiting:
+            if self.listen_events() is False: return
+
+        # if self.game.mapElegido[tamano - 1] == "ocean_wall.png":
+        #     self.game.mapElegido.append("river.png")
+        # else:
+        #     self.game.mapElegido.append("ocean_wall.png")
+
+        for myScreen in self.game.my_screens:
+            myScreen.kill()
 
 
 class StateGameOverScreen(StateGame, Manager):
@@ -588,8 +668,15 @@ class StateGameOverScreen(StateGame, Manager):
         self.waiting = None
 
     def init(self):
-        self.waiting = True
+        # Game Over screen
         Game.get_instance().gamestate = "Game Over"
+        self.game.active_screen.setImage('game_over.jpg')
+        self.game.screen.blit(self.game.active_screen.image, self.game.active_screen.rect)
+
+        # update all the sprites
+        self.game.all.update()
+
+        pygame.display.update()
 
     def listen_events(self):
         for event in pygame.event.get():
@@ -598,8 +685,11 @@ class StateGameOverScreen(StateGame, Manager):
                 return False
 
     def show_game_over_screen(self):
-        self.init()
+        self.waiting = True
 
+        self.init()
         while self.waiting:
             if self.listen_events() is False: return
 
+        for myScreen in self.game.my_screens:
+            myScreen.kill()
