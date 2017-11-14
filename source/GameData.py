@@ -54,6 +54,7 @@ class Game:
             cls.all = None
             cls.mapElegido = []
             cls.index = None
+            cls.user_name = None
 
         return cls.instance
 
@@ -401,7 +402,8 @@ class StateCharSelectionScreen(StateGame, Manager):
 
     async def fetch(self):
         self.game.player_character = self.char_name
-        dict_to_send = {'userName': self.textinput.get_text(), 'characterName': self.char_name}
+        self.game.user_name = self.textinput.get_text()
+        dict_to_send = {'userName': self.game.user_name, 'characterName': self.char_name}
         task = await curio.spawn(asks.post('https://team-b-api.herokuapp.com/api/login/',
                                            json=dict_to_send, timeout=1))
         await self.on_response_received(await task.join())
@@ -433,20 +435,22 @@ class StateIngameScreen(StateGame, Manager):
         # ingame screen
         Game.get_instance().gamestate = "in game"
 
-        # self.tamano = len(self.game.mapElegido)
+        scenario = self.game.response.json()['stages'][self.game.index]['scenario']
 
-        self.game.active_screen.setImage(self.game.response.json()['stages'][self.game.index]['scenario'])
+        self.game.active_screen.setImage(scenario)
 
         # get char elegido
         self.playerCharacter = [char for char in self.game.playable_characters if char.name == self.game.player_character][0]
 
-
         # get mapa elegido
-        mapas = MapManager()
+        map_manager = MapManager()
 
-        self.game.battleground = [mapa for mapa in mapas.maps if mapa.background == self.game.mapElegido[self.game.index]][0]
+        self.game.battleground = list(filter(lambda mapa: mapa.background == scenario, map_manager.maps))[0]
 
-        self.playerCharacter_rect = Rect(self.game.battleground.respawnpoints[0],self.game.battleground.respawnpoints[1], 60, 40)
+        # self.game.battleground = [mapa for mapa in map_manager.maps if mapa.background == scenario][0]
+
+        self.playerCharacter_rect = Rect(self.game.battleground.respawnpoints[0],
+                                         self.game.battleground.respawnpoints[1], 60, 40)
 
         self.playerCharacter.rect = self.playerCharacter_rect
 
@@ -456,15 +460,10 @@ class StateIngameScreen(StateGame, Manager):
         self.banderaelegida = Flag(flag_rect)
 
     def first_render(self):
-
         # pintar fondo
         self.game.screen.blit(self.game.active_screen.image, self.game.active_screen.rect)
 
-        # for x in range(0, self.game.screenrect.width, bgdtile.get_width()):
-        #     background.blit(bgdtile, (x, 0))
-
         self.game.background = pygame.Surface(Game.get_instance().screenrect.size)
-        # setear paredes
 
         for wall in self.game.battleground.walls:
             pygame.draw.rect(self.game.screen, (33, 33, 33), wall, 0)
@@ -479,7 +478,6 @@ class StateIngameScreen(StateGame, Manager):
 
         # pintar jugador
         self.game.screen.blit(self.playerCharacter.imageGame, self.playerCharacter.rect)
-
 
         pygame.display.update()
 
@@ -546,16 +544,17 @@ class StateIngameScreen(StateGame, Manager):
 
     async def fetch(self, result, status):
         dict_to_send = self.get_user_payload(self.game.response.json(), result, status)
-        task = await curio.spawn(asks.put('https://team-b-api.herokuapp.com/api/login/',
-                                           json=dict_to_send, timeout=1))
+        task = await curio.spawn(asks.put('https://team-b-api.herokuapp.com/api/login/'
+                                          + self.game.response.json()['loginId'], json=dict_to_send, timeout=1))
         map(lambda x: self.on_response_received(), await task.join())
 
     def get_user_payload(self, json_match, result, status):
         return {'userId': json_match['userId'],
+                'userName': self.game.user_name,
                 'match': self.get_match_payload(json_match, result, status)}
 
     def get_match_payload(self, json_match, result, status):
-        return {'id': json_match['id'],
+        return {'id': json_match['matchId'],
                 'result': result,
                 'status': status,
                 'stages': self.stages_to_send}
@@ -601,7 +600,6 @@ class StateVictoryScreen(StateGame, Manager):
     def process_logic(self):
         # Siguiente escenario
         keystate = pygame.key.get_pressed()
-        # tamano = len(self.game.mapElegido)
         if keystate[K_RETURN] or keystate[K_KP_ENTER]:
             self.waiting = False
 
@@ -612,11 +610,6 @@ class StateVictoryScreen(StateGame, Manager):
         while self.waiting:
             if self.listen_events() is False: return
             self.process_logic()
-
-        # if self.game.mapElegido[tamano - 1] == "ocean_wall.png":
-        #     self.game.mapElegido.append("river.png")
-        # else:
-        #     self.game.mapElegido.append("ocean_wall.png")
 
         for myScreen in self.game.my_screens:
             myScreen.kill()
@@ -652,11 +645,6 @@ class StateMatchCompletedScreen(StateGame, Manager):
         self.waiting = True
         while self.waiting:
             if self.listen_events() is False: return
-
-        # if self.game.mapElegido[tamano - 1] == "ocean_wall.png":
-        #     self.game.mapElegido.append("river.png")
-        # else:
-        #     self.game.mapElegido.append("ocean_wall.png")
 
         for myScreen in self.game.my_screens:
             myScreen.kill()

@@ -1,4 +1,3 @@
-
 from pygame.locals import *
 
 class Map:
@@ -42,6 +41,3 @@ class MapManager:
 
     # def getMapByFilename(self,Name):
     #     return (mapa for mapa in self.maps if mapa.background == Name)[0]
-
-
-
