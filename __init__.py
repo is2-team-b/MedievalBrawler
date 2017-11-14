@@ -25,8 +25,9 @@ def main():
     source.GameData.Game.get_instance().state.show_ingame_screen()
     source.GameData.Game.get_instance().state.show_stage_result_screen()
     source.GameData.Game.get_instance().state.show_ingame_screen()
-    source.GameData.Game.get_instance().state.show_match_cleared_screen()
+    source.GameData.Game.get_instance().state.show_stage_result_screen()
 
+    source.GameData.Game.get_instance().state.show_match_completed_screen()
     source.GameData.Game.get_instance().state.show_game_over_screen()
 
 

@@ -52,9 +52,9 @@ class Game:
             cls.player_character = None
             cls.playable_characters = None
             cls.all = None
-            cls.mapElegido = []
             cls.index = None
             cls.user_name = None
+            cls.stages_to_send = []
 
         return cls.instance
 
@@ -414,7 +414,6 @@ class StateCharSelectionScreen(StateGame, Manager):
 
         self.game.index = 0
         self.game.response = response
-        # self.game.mapElegido.append(self.game.response.json()['stages'][self.game.index]['scenario'])
 
         self.game.state = StateIngameScreen(self.game)
 
@@ -422,14 +421,12 @@ class StateCharSelectionScreen(StateGame, Manager):
 class StateIngameScreen(StateGame, Manager):
     def __init__(self, game):
         StateGame.__init__(self, game)
-        self.tamano = None
         self.playerCharacter = None
         self.playerCharacter_rect = None
         self.banderaelegida = None
         self.waiting = None
         self.condicionVictoria = None
         self.payload_to_send = None
-        self.stages_to_send = None
 
     def init(self):
         # ingame screen
@@ -440,14 +437,13 @@ class StateIngameScreen(StateGame, Manager):
         self.game.active_screen.setImage(scenario)
 
         # get char elegido
-        self.playerCharacter = [char for char in self.game.playable_characters if char.name == self.game.player_character][0]
+        self.playerCharacter = list(filter(lambda char: char.name == self.game.player_character,
+                                           self.game.playable_characters))[0]
 
         # get mapa elegido
         map_manager = MapManager()
 
         self.game.battleground = list(filter(lambda mapa: mapa.background == scenario, map_manager.maps))[0]
-
-        # self.game.battleground = [mapa for mapa in map_manager.maps if mapa.background == scenario][0]
 
         self.playerCharacter_rect = Rect(self.game.battleground.respawnpoints[0],
                                          self.game.battleground.respawnpoints[1], 60, 40)
@@ -458,6 +454,7 @@ class StateIngameScreen(StateGame, Manager):
         flag_rect = Rect(1120, 370, 30, 77)
 
         self.banderaelegida = Flag(flag_rect)
+
 
     def first_render(self):
         # pintar fondo
@@ -525,10 +522,8 @@ class StateIngameScreen(StateGame, Manager):
             self.process_logic()
             self.render_update()
 
-        self.stages_to_send = self.stages_to_send if self.stages_to_send is not None else []
-
         if self.condicionVictoria:
-            self.stages_to_send.append(
+            self.game.stages_to_send.append(
                 self.get_stage_payload(self.game.response.json(), self.game.index, 'win', 'complete'))
             self.game.index += 1
             if self.game.index < 2:
@@ -536,17 +531,15 @@ class StateIngameScreen(StateGame, Manager):
             else:
                 curio.run(self.fetch('win', 'complete'))
         else:
-            self.stages_to_send.append(
+            self.game.stages_to_send.append(
                 self.get_stage_payload(self.game.response.json(), self.game.index, 'loss', 'complete'))
             curio.run(self.fetch('loss', 'complete' if self.game.index > 1 else 'incomplete'))
-
-
 
     async def fetch(self, result, status):
         dict_to_send = self.get_user_payload(self.game.response.json(), result, status)
         task = await curio.spawn(asks.put('https://team-b-api.herokuapp.com/api/login/'
-                                          + self.game.response.json()['loginId'], json=dict_to_send, timeout=1))
-        map(lambda x: self.on_response_received(), await task.join())
+                                          + self.game.response.json()['loginId'] + '/', json=dict_to_send, timeout=1))
+        await self.on_response_received(await task.join())
 
     def get_user_payload(self, json_match, result, status):
         return {'userId': json_match['userId'],
@@ -557,14 +550,14 @@ class StateIngameScreen(StateGame, Manager):
         return {'id': json_match['matchId'],
                 'result': result,
                 'status': status,
-                'stages': self.stages_to_send}
+                'stages': self.game.stages_to_send}
 
     def get_stage_payload(self, json_match, index, result, status):
         return {'id': json_match['stages'][index],
                 'result': result,
                 'status': status}
 
-    async def on_response_received(self):
+    async def on_response_received(self, response):
         for myScreen in self.game.my_screens:
             myScreen.kill()
 
@@ -583,7 +576,7 @@ class StateVictoryScreen(StateGame, Manager):
     def init(self):
         # Victory screen
         Game.get_instance().gamestate = "Victory"
-        self.game.active_screen.setImage(self.game.response.json()['stages'][self.game.index]['scenario'])
+        self.game.active_screen.setImage('victory_screen.png')
         self.game.screen.blit(self.game.active_screen.image, self.game.active_screen.rect)
 
         # update all the sprites
@@ -624,8 +617,8 @@ class StateMatchCompletedScreen(StateGame, Manager):
 
     def init(self):
         # Match cleared screen
-        Game.get_instance().gamestate = "Match cleared"
-        self.game.active_screen.setImage('game-completed.png')
+        Game.get_instance().gamestate = "Match completed"
+        self.game.active_screen.setImage('game_completed.png')
         self.game.screen.blit(self.game.active_screen.image, self.game.active_screen.rect)
 
         # update all the sprites
