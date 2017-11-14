@@ -21,12 +21,12 @@ def main():
     # main loop
     source.GameData.Game.get_instance().state.show_splash_screen()
     source.GameData.Game.get_instance().state.show_char_selection_screen()
+
     source.GameData.Game.get_instance().state.show_ingame_screen()
-    source.GameData.Game.get_instance().state.show_game_result_screen()
-    source.GameData.Game.get_instance().state.show_splash_screen()
-    #tamano=len(source.GameData.Game.mapElegido)
-    #print(tamano)
-    source.GameData.Game.get_instance().state.show_game_result_screen()
+    source.GameData.Game.get_instance().state.show_stage_result_screen()
+    source.GameData.Game.get_instance().state.show_ingame_screen()
+    source.GameData.Game.get_instance().state.show_match_cleared_screen()
+
     source.GameData.Game.get_instance().state.show_game_over_screen()
 
 

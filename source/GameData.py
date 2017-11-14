@@ -531,16 +531,16 @@ class StateIngameScreen(StateGame, Manager):
 
         if self.condicionVictoria:
             self.stages_to_send.append(
-                self.get_stage_payload(self.game.response.json(), self.game.index, 'win', 'completed'))
+                self.get_stage_payload(self.game.response.json(), self.game.index, 'win', 'complete'))
             self.game.index += 1
             if self.game.index < 2:
                 self.game.state = StateVictoryScreen(self.game)
             else:
-                curio.run(self.fetch('win', 'completed'))
+                curio.run(self.fetch('win', 'complete'))
         else:
             self.stages_to_send.append(
-                self.get_stage_payload(self.game.response.json(), self.game.index, 'loss', 'completed'))
-            curio.run(self.fetch('loss', 'completed' if self.game.index > 1 else 'incompleted'))
+                self.get_stage_payload(self.game.response.json(), self.game.index, 'loss', 'complete'))
+            curio.run(self.fetch('loss', 'complete' if self.game.index > 1 else 'incomplete'))
 
 
 
