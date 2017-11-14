@@ -69,11 +69,18 @@ class Character(pygame.sprite.Sprite):
                 #         self.speed = [0, 1]
                 # self.speed = [0, -1]
                 self.speed = [-self.speed[0], -self.speed[1]]
+        elif keyPress[pygame.K_SPACE]:
+            now=pygame.time.get_ticks()
+            if now -self.last_shot>170:
+                self.last_shot=now
+                dir=(1,0)
+                Proyectile(self.game,self.pos,dir)
         else:
             self.speed = [0, 0]
 
         # Mover en base a posición actual y velocidad.
         self.rect.move_ip(self.speed)
+
 
     def collide_with_obstacles(self):
         for wall in GameData.Game.get_instance().battleground.walls:
@@ -83,4 +90,25 @@ class Character(pygame.sprite.Sprite):
             if pool.colliderect(self.rect):
                 return True
         return False
+#se anade el projectil
+class Proyectile(pygame.sprite.Sprite):
+    def __init__(self,game,pos,dir):
+        self.game=pygame
+        self.image=Graphics.load_image("Proyectile2.png")
+        self.rect=self.image.get_rect()
+        self.game=game
+        self.pos=pos
+        self.rect.center=pos
+        self.vel=dir*300
+        self.spawn_time= 1000
+
+    def update(self):
+            self.pos +=self.vel
+            self.rect.center=self.pos
+            if pygame.time.get_ticks()-self.spawn_time>1000:
+                self.kill()
+
+
+
+
 
