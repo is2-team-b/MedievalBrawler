@@ -480,10 +480,10 @@ class StateIngameScreen(StateGame, Manager):
         # pintar banderas
         self.game.screen.blit(self.banderaelegida.image, self.banderaelegida.rect)
 
-        # pintar jugador
+        # pintar/actualizar jugador
         self.game.screen.blit(self.playerCharacter.imageGame, self.playerCharacter.rect)
 
-        pygame.display.update()
+        # pygame.display.update()
 
     def listen_events(self):
         # get input
@@ -493,13 +493,14 @@ class StateIngameScreen(StateGame, Manager):
                 return False
 
     def process_logic(self):
+
         keystate = pygame.key.get_pressed()
-        if keystate[K_UP] or keystate[K_DOWN] or keystate[K_LEFT] or keystate[K_RIGHT]:
+        if keystate[K_UP] or keystate[K_DOWN] or keystate[K_LEFT] or keystate[K_RIGHT]\
+                or (keystate[pygame.K_RIGHT] and keystate[pygame.K_UP]) or (keystate[pygame.K_LEFT] and keystate[pygame.K_UP])\
+                or (keystate[pygame.K_LEFT] and keystate[pygame.K_DOWN]) or (keystate[pygame.K_RIGHT] and keystate[pygame.K_DOWN]):
             self.playerCharacter.move(keystate,self.playerCharacter)
         elif keystate[K_SPACE]:
-            projectile = self.playerCharacter.shoot(self.time, self.game.projectiles)
-            # self.game.projectiles.add(projectile)
-            self.game.screen.blit(projectile[0], projectile[1])
+            self.playerCharacter.shoot(self.time)
 
         # logica cuando agarra la bandera
         # player_flag_collide = pygame.sprite.collide_rect_ratio(0.5)
@@ -519,17 +520,16 @@ class StateIngameScreen(StateGame, Manager):
         self.game.all.update()
 
         pygame.display.flip()
-
         # cap the framerate
         # self.game.clock.tick(int(self.game.response.json()['stages'][self.game.index]['difficulty']))
         self.game.clock.tick(45)
 
     def show_stage_result_screen(self):
         self.init()
-
+        self.first_render()
         self.waiting = True
         while self.waiting:
-            self.first_render()
+
             if self.listen_events() is False: return
             self.process_logic()
             self.render_update()

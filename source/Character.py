@@ -18,31 +18,73 @@ class Character(pygame.sprite.Sprite):
         self.speed = [0, 0]
         self.last_shot = 0
         self.last_dir = [1,0]
+        self.last_angle = 0
+        self.last_hitbox = (15,65)
 
     def move(self, keyPress, char):
         # if not self.collide_with_obstacles():
-        if keyPress[pygame.K_LEFT] and self.rect.left > 0:
+        if keyPress[pygame.K_RIGHT] and keyPress[pygame.K_UP]:
+            if not self.collide_with_obstacles():
+                self.speed = [5, -5]
+                char.last_dir = self.speed
+                char.last_angle = 135
+                char.last_hitbox = (10, 20)
+            else:
+                self.speed = [-self.speed[0], -self.speed[1]]
+        elif keyPress[pygame.K_LEFT] and keyPress[pygame.K_UP]:
+            if not self.collide_with_obstacles():
+                self.speed = [-5, -5]
+                char.last_dir = self.speed
+                char.last_angle = -135
+                char.last_hitbox = (10, 20)
+            else:
+                self.speed = [-self.speed[0], -self.speed[1]]
+        elif keyPress[pygame.K_LEFT] and keyPress[pygame.K_DOWN]:
+            if not self.collide_with_obstacles():
+                self.speed = [-5, 5]
+                char.last_dir = self.speed
+                char.last_angle = -45
+                char.last_hitbox = (10, 20)
+            else:
+                self.speed = [-self.speed[0], -self.speed[1]]
+        elif keyPress[pygame.K_RIGHT] and keyPress[pygame.K_DOWN]:
+            if not self.collide_with_obstacles():
+                self.speed = [5, 5]
+                char.last_dir = self.speed
+                char.last_angle = 45
+                char.last_hitbox = (10, 20)
+            else:
+                self.speed = [-self.speed[0], -self.speed[1]]
+        elif keyPress[pygame.K_LEFT] and self.rect.left > 0:
             if not self.collide_with_obstacles():
                 self.speed = [-5, 0]
                 char.last_dir = self.speed
+                char.last_angle = -90
+                char.last_hitbox = (15,65)
             else:
                 self.speed = [-self.speed[0],-self.speed[1]]
         elif keyPress[pygame.K_RIGHT] and self.rect.right < GameData.Game.get_instance().arenarect.width:
             if not self.collide_with_obstacles():
                 self.speed = [5, 0]
                 char.last_dir = self.speed
+                char.last_angle = 90
+                char.last_hitbox = (15, 65)
             else:
                 self.speed = [-self.speed[0], -self.speed[1]]
         elif keyPress[pygame.K_DOWN] and self.rect.bottom + 10 < GameData.Game.get_instance().arenarect.height:
             if not self.collide_with_obstacles():
                 self.speed = [0, 5]
                 char.last_dir = self.speed
+                char.last_angle = 0
+                char.last_hitbox = (65, 15)
             else:
                 self.speed = [-self.speed[0], -self.speed[1]]
         elif keyPress[pygame.K_UP] and self.rect.top - 7 > 0:
             if not self.collide_with_obstacles():
                 self.speed = [0, -5]
                 char.last_dir = self.speed
+                char.last_angle = 180
+                char.last_hitbox = (65, 15)
             else:
                 self.speed = [-self.speed[0], -self.speed[1]]
         else:
@@ -61,15 +103,18 @@ class Character(pygame.sprite.Sprite):
                 return True
         return False
 
-    def shoot(self, time,projectiles):
+    def shoot(self, time):
         now = time.get_ticks()
         if now - self.last_shot > 170:
             self.last_shot = now
             dirProjectile = self.last_dir
             pos = self.rect.center
-            charProyectil = Proyectile( pos, dirProjectile)
-            projectiles.add(charProyectil)
-            return charProyectil.image,charProyectil.rect
+            angleProjectile = self.last_angle
+            hbProjectile = self.last_hitbox
+            Proyectile( pos, dirProjectile, angleProjectile, hbProjectile)
+            # Proyectile( pos, dirProjectile)
+            # projectiles.add(charProyectil)
+            # return charProyectil.image,charProyectil.rect
 
 
 
