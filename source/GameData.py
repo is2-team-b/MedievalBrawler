@@ -9,6 +9,7 @@ import asks
 
 from source.MyScreen import MyScreen      # MyScreen class
 from source.Character import Character    # Character class
+from source.Projectile import Proyectile
 from source.Box import Box
 from source import Text
 from source.Flag import Flag
@@ -222,6 +223,7 @@ class StateAssignedToGroups(StateGame, Manager):
         MyScreen.containers = self.game.my_screens, self.game.all
         Character.containers = self.game.characters, self.game.all
         Box.containers = self.game.boxes, self.game.all
+        Proyectile.containers = self.game.projectiles, self.game.all
         self.game.step = 0  # used in calculation of animation cycles
 
     def show_splash_screen(self):
@@ -495,9 +497,9 @@ class StateIngameScreen(StateGame, Manager):
         if keystate[K_UP] or keystate[K_DOWN] or keystate[K_LEFT] or keystate[K_RIGHT]:
             self.playerCharacter.move(keystate,self.playerCharacter)
         elif keystate[K_SPACE]:
-            projectile = self.playerCharacter.shoot(self.time)
-            self.game.projectiles.add(projectile)
-            # self.game.screen.blit(charProyectile[0], charProyectile[1])
+            projectile = self.playerCharacter.shoot(self.time, self.game.projectiles)
+            # self.game.projectiles.add(projectile)
+            self.game.screen.blit(projectile[0], projectile[1])
 
         # logica cuando agarra la bandera
         # player_flag_collide = pygame.sprite.collide_rect_ratio(0.5)

@@ -61,14 +61,15 @@ class Character(pygame.sprite.Sprite):
                 return True
         return False
 
-    def shoot(self, time):
+    def shoot(self, time,projectiles):
         now = time.get_ticks()
         if now - self.last_shot > 170:
             self.last_shot = now
             dirProjectile = self.last_dir
             pos = self.rect.center
             charProyectil = Proyectile( pos, dirProjectile)
-            return charProyectil
+            projectiles.add(charProyectil)
+            return charProyectil.image,charProyectil.rect
 
 
 
