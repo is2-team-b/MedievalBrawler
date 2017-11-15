@@ -4,10 +4,10 @@ from source import Graphics
 
 #se anade el projectil
 class Proyectile(pygame.sprite.Sprite):
-    def __init__(self,pos,dirProjectile, angleProjectile, hitboxProjectile):
+    def __init__(self,pos,dirProjectile, angleProjectile, hitboxProjectile, projectileChar):
         pygame.sprite.Sprite.__init__(self, self.containers)
         # super(Proyectile, self).__init__()
-        self.image=Graphics.load_image("Proyectile2.png")
+        self.image=projectileChar
         self.rect=self.image.get_rect()
         # self.game=game
         self.pos = (pos[0],pos[1])
@@ -21,7 +21,7 @@ class Proyectile(pygame.sprite.Sprite):
         self.dirProjectile = dirProjectile
         self.angle = angleProjectile
         self.image = pygame.transform.rotate(self.image, self.angle)
-        # self.image = pygame.transform.scale(self.image, hitboxProjectile)
+        # self.image = pygame.transform.scale(self.image, (30,105))
         GameData.Game.get_instance().projectiles.add(self)
         GameData.Game.get_instance().screen.blit(self.image, self.rect)
         # self.gameScreen = gameScreen

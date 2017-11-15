@@ -6,7 +6,7 @@ from source.Map import *
 
 class Character(pygame.sprite.Sprite):
     # The character which the player will play with
-    def __init__(self, name, image, rect, imageGame):
+    def __init__(self, name, image, rect, imageGame, projectileChar):
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.name = name
         self.image = Graphics.load_image(image)
@@ -14,12 +14,14 @@ class Character(pygame.sprite.Sprite):
         # Se añadio un atributo que guarda el sprite para el juego SPRINT3
         self.imageGame = Graphics.load_image(imageGame)
         self.imageGame = pygame.transform.scale(self.imageGame, (60, 80))
+        self.projectileChar = Graphics.load_image(projectileChar)
         self.rect = rect
         self.speed = [0, 0]
         self.last_shot = 0
         self.last_dir = [1,0]
         self.last_angle = 0
         self.last_hitbox = (15,65)
+
 
     def move(self, keyPress, char):
         # if not self.collide_with_obstacles():
@@ -111,7 +113,8 @@ class Character(pygame.sprite.Sprite):
             pos = self.rect.center
             angleProjectile = self.last_angle
             hbProjectile = self.last_hitbox
-            Proyectile( pos, dirProjectile, angleProjectile, hbProjectile)
+            projectileChar = self.projectileChar
+            Proyectile( pos, dirProjectile, angleProjectile, hbProjectile, projectileChar)
             # Proyectile( pos, dirProjectile)
             # projectiles.add(charProyectil)
             # return charProyectil.image,charProyectil.rect

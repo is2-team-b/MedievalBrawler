@@ -302,11 +302,11 @@ class StateCharSelectionScreen(StateGame, Manager):
 
     def init(self):
         self.charList = [Character('Blue Crossbowman', 'blue_crossbowman.png', Rect(50, 100, 282, 440),
-                              'blue_crossbowman_top_down.png'),
-                    Character('Blue Mage', 'blue_mage.png', Rect(382, 100, 282, 449), 'blue_mage_top_down.png'),
+                              'blue_crossbowman_top_down.png','ProjectileCrossbowman.png'),
+                    Character('Blue Mage', 'blue_mage.png', Rect(382, 100, 282, 449), 'blue_mage_top_down.png','ProjectileMage.png'),
                     Character('Blue Sorcerer', 'blue_sorcerer.png', Rect(714, 100, 269, 500),
-                              'blue_sorcerer_top_down.png'),
-                    Character('Dark Archer', 'dark_archer.png', Rect(1033, 100, 282, 374), 'dark_archer_top_down.png')]
+                              'blue_sorcerer_top_down.png','ProjectileSorcerer.png'),
+                    Character('Dark Archer', 'dark_archer.png', Rect(1033, 100, 282, 374), 'dark_archer_top_down.png','ProjectileArcher.png')]
 
         self.game.playable_characters = self.charList
         # Box
@@ -436,8 +436,8 @@ class StateIngameScreen(StateGame, Manager):
         # ingame screen
         Game.get_instance().gamestate = "in game"
 
-        # scenario = self.game.response.json()['stages'][self.game.index]['scenario']
-        scenario = "river.png"
+        scenario = self.game.response.json()['stages'][self.game.index]['scenario']
+        # scenario = "river.png"
 
         self.game.active_screen.setImage(scenario)
 
@@ -483,8 +483,6 @@ class StateIngameScreen(StateGame, Manager):
         # pintar/actualizar jugador
         self.game.screen.blit(self.playerCharacter.imageGame, self.playerCharacter.rect)
 
-        # pygame.display.update()
-
     def listen_events(self):
         # get input
         for event in pygame.event.get():
@@ -503,7 +501,6 @@ class StateIngameScreen(StateGame, Manager):
             self.playerCharacter.shoot(self.time)
 
         # logica cuando agarra la bandera
-        # player_flag_collide = pygame.sprite.collide_rect_ratio(0.5)
         if pygame.sprite.collide_rect(self.playerCharacter, self.banderaelegida):
             self.condicionVictoria = True
             self.waiting = False
@@ -521,15 +518,15 @@ class StateIngameScreen(StateGame, Manager):
 
         pygame.display.flip()
         # cap the framerate
-        # self.game.clock.tick(int(self.game.response.json()['stages'][self.game.index]['difficulty']))
-        self.game.clock.tick(45)
+        self.game.clock.tick(int(self.game.response.json()['stages'][self.game.index]['difficulty']))
+        # self.game.clock.tick(45)
 
     def show_stage_result_screen(self):
         self.init()
-        self.first_render()
+
         self.waiting = True
         while self.waiting:
-
+            self.first_render()
             if self.listen_events() is False: return
             self.process_logic()
             self.render_update()
