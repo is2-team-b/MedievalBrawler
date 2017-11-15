@@ -205,6 +205,7 @@ class StateCreatedGroups(StateGame, Manager):
         self.game.my_screens = pygame.sprite.Group()
         self.game.characters = pygame.sprite.Group()
         self.game.boxes = pygame.sprite.Group()
+        self.game.projectiles = pygame.sprite.Group()
         self.game.all = pygame.sprite.RenderUpdates()
 
     def assign_to_groups(self):
@@ -427,12 +428,14 @@ class StateIngameScreen(StateGame, Manager):
         self.waiting = None
         self.condicionVictoria = None
         self.payload_to_send = None
+        self.time = None
 
     def init(self):
         # ingame screen
         Game.get_instance().gamestate = "in game"
 
-        scenario = self.game.response.json()['stages'][self.game.index]['scenario']
+        # scenario = self.game.response.json()['stages'][self.game.index]['scenario']
+        scenario = "river.png"
 
         self.game.active_screen.setImage(scenario)
 
@@ -457,6 +460,8 @@ class StateIngameScreen(StateGame, Manager):
 
 
     def first_render(self):
+        #set time de Juego
+        self.time = pygame.time
         # pintar fondo
         self.game.screen.blit(self.game.active_screen.image, self.game.active_screen.rect)
 
@@ -488,7 +493,11 @@ class StateIngameScreen(StateGame, Manager):
     def process_logic(self):
         keystate = pygame.key.get_pressed()
         if keystate[K_UP] or keystate[K_DOWN] or keystate[K_LEFT] or keystate[K_RIGHT]:
-            self.playerCharacter.move(keystate)
+            self.playerCharacter.move(keystate,self.playerCharacter)
+        elif keystate[K_SPACE]:
+            projectile = self.playerCharacter.shoot(self.time)
+            self.game.projectiles.add(projectile)
+            # self.game.screen.blit(charProyectile[0], charProyectile[1])
 
         # logica cuando agarra la bandera
         # player_flag_collide = pygame.sprite.collide_rect_ratio(0.5)
@@ -510,7 +519,8 @@ class StateIngameScreen(StateGame, Manager):
         pygame.display.flip()
 
         # cap the framerate
-        self.game.clock.tick(int(self.game.response.json()['stages'][self.game.index]['difficulty']))
+        # self.game.clock.tick(int(self.game.response.json()['stages'][self.game.index]['difficulty']))
+        self.game.clock.tick(45)
 
     def show_stage_result_screen(self):
         self.init()
