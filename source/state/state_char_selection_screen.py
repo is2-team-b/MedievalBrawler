@@ -140,5 +140,3 @@ class StateCharSelectionScreen(StateGame, Manager):
 
         self.game.index = 0
         self.game.response = response
-
-        self.game.state = StateIngameScreen(self.game)
