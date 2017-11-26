@@ -4,6 +4,7 @@ from pygame.locals import *
 from source.state.state_game import StateGame
 from source.manager import Manager
 from source.MyScreen import MyScreen      # MyScreen class
+from source.state.state_char_selection_screen import StateCharSelectionScreen
 
 class StateSplashScreen(StateGame, Manager):
     def __init__(self, game):
@@ -58,3 +59,5 @@ class StateSplashScreen(StateGame, Manager):
 
         for myScreen in self.game.my_screens:
             myScreen.kill()
+
+        self.game.state = StateCharSelectionScreen(self.game)

@@ -4,6 +4,7 @@ from source.MyScreen import MyScreen      # MyScreen class
 from source.Character import Character    # Character class
 from source.Projectile import Proyectile
 from source.Box import Box
+from source.state.state_splash_screen import StateSplashScreen
 
 class StateAssignedToGroups(StateGame, Manager):
     def __init__(self, game):
@@ -19,3 +20,4 @@ class StateAssignedToGroups(StateGame, Manager):
 
     def show_splash_screen(self):
         self.init()
+        self.game.state = StateSplashScreen(self.game)

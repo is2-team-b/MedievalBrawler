@@ -24,44 +24,24 @@ from source.state.state_game_over_screen import StateGameOverScreen
 
 def main():
     source.GameData.Game.get_instance().state.init_sound()
-    source.GameData.Game.get_instance().state = StateInitSound(source.GameData.Game.get_instance())
-
     source.GameData.Game.get_instance().state.init_screen()
-    source.GameData.Game.get_instance().state = StateInitScreen(source.GameData.Game.get_instance())
-
     source.GameData.Game.get_instance().state.load_sound()
-    source.GameData.Game.get_instance().state = StateLoadedSound(source.GameData.Game.get_instance())
-
     source.GameData.Game.get_instance().state.create_groups()
-    source.GameData.Game.get_instance().state = StateCreatedGroups(source.GameData.Game.get_instance())
-
     source.GameData.Game.get_instance().state.assign_to_groups()
-    source.GameData.Game.get_instance().state = StateAssignedToGroups(source.GameData.Game.get_instance())
 
     # main loop
     source.GameData.Game.get_instance().state.show_splash_screen()
-    source.GameData.Game.get_instance().state = StateSplashScreen(source.GameData.Game.get_instance())
-
     source.GameData.Game.get_instance().state.show_char_selection_screen()
-    source.GameData.Game.get_instance().state = StateCharSelectionScreen(source.GameData.Game.get_instance())
 
     source.GameData.Game.get_instance().state.show_ingame_screen()
-    source.GameData.Game.get_instance().state = StateIngameScreen(source.GameData.Game.get_instance())
-
     source.GameData.Game.get_instance().state.show_stage_result_screen()
-    source.GameData.Game.get_instance().state = StateVictoryScreen(source.GameData.Game.get_instance())
 
     source.GameData.Game.get_instance().state.show_ingame_screen()
-    source.GameData.Game.get_instance().state = StateIngameScreen(source.GameData.Game.get_instance())
-
     source.GameData.Game.get_instance().state.show_stage_result_screen()
-    source.GameData.Game.get_instance().state = StateMatchCompletedScreen(source.GameData.Game.get_instance())
 
     source.GameData.Game.get_instance().state.show_match_completed_screen()
-    source.GameData.Game.get_instance().state = StateGameOverScreen(source.GameData.Game.get_instance())
 
     source.GameData.Game.get_instance().state.show_game_over_screen()
-
 
 
 if __name__ == '__main__':

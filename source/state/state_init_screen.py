@@ -2,6 +2,7 @@ import pygame
 
 from source.state.state_game import StateGame
 from source.manager import Manager
+from source.state.state_loaded_sound import StateLoadedSound
 
 class StateInitScreen(StateGame, Manager):
     def __init__(self, game):
@@ -31,3 +32,4 @@ class StateInitScreen(StateGame, Manager):
         self.listen_events()
         self.process_logic()
         self.render_update()
+        self.game.state = StateLoadedSound(self.game)

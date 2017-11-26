@@ -4,6 +4,9 @@ import asks
 
 from source.state.state_game import StateGame
 from source.manager import Manager
+from source.state.state_victory_screen import StateVictoryScreen
+from source.state.state_match_completed_screen import StateMatchCompletedScreen
+from source.state.state_game_over_screen import StateGameOverScreen
 from source.Flag import Flag
 from source.Map import *
 
@@ -124,7 +127,7 @@ class StateIngameScreen(StateGame, Manager):
             if self.game.index > 1:
                 curio.run(self.fetch('win', 'complete'))
             else:
-                'Victory screen'
+                self.game.state = StateVictoryScreen(self.game)
         else:
             self.game.stages_to_send.append(
                 self.get_stage_payload(self.game.response.json(), self.game.index, 'loss', 'complete'))
@@ -158,6 +161,6 @@ class StateIngameScreen(StateGame, Manager):
 
         if self.condicionVictoria:
             if self.game.index > 1:
-                'Match completed screen'
+                self.game.state = StateMatchCompletedScreen(self.game)
         else:
-            'Game over screen'
+            self.game.state = StateGameOverScreen(self.game)

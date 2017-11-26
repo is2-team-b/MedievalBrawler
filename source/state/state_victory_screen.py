@@ -3,6 +3,7 @@ import pygame
 from pygame.locals import *
 from source.state.state_game import StateGame
 from source.manager import Manager
+import source
 
 class StateVictoryScreen(StateGame, Manager):
     def __init__(self, game):
@@ -42,3 +43,5 @@ class StateVictoryScreen(StateGame, Manager):
 
         for myScreen in self.game.my_screens:
             myScreen.kill()
+
+        self.game.state = source.StateIngameScreen(self.game)

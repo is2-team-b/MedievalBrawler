@@ -3,6 +3,7 @@ import pygame
 
 from source.state.state_game import StateGame
 from source.manager import Manager
+from source.state.state_created_groups import StateCreatedGroups
 
 class StateLoadedSound(StateGame, Manager):
     def __init__(self, game):
@@ -17,3 +18,4 @@ class StateLoadedSound(StateGame, Manager):
 
     def create_groups(self):
         self.init()
+        self.game.state = StateCreatedGroups(self.game)

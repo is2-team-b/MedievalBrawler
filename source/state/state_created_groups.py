@@ -2,6 +2,7 @@ import pygame
 
 from source.state.state_game import StateGame
 from source.manager import Manager
+from source.state.state_assigned_to_groups import StateAssignedToGroups
 
 class StateCreatedGroups(StateGame, Manager):
     def __init__(self, game):
@@ -17,3 +18,4 @@ class StateCreatedGroups(StateGame, Manager):
 
     def assign_to_groups(self):
         self.init()
+        self.game.state = StateAssignedToGroups(self.game)
