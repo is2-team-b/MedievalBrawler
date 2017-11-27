@@ -3,6 +3,7 @@ import pygame
 from pygame.locals import *
 from source.state.state_game import StateGame
 from source.manager import Manager
+from source.Text import draw_text
 
 class StateMatchCompletedScreen(StateGame, Manager):
     def __init__(self, game):
@@ -16,6 +17,16 @@ class StateMatchCompletedScreen(StateGame, Manager):
         for projectile in self.game.projectiles:
             projectile.kill()
         self.game.screen.blit(self.game.active_screen.image, self.game.active_screen.rect)
+
+        # pintar Puntajes
+        playerScores =
+        numPlayerAux = 1
+        y = 500
+        for playerScore in playerScores:
+            draw_text(self.game.screen, str(numPlayerAux + playerScore.Name), 500, y)
+            draw_text(self.game.screen, playerScore.Kills, 730, y)
+            numPlayerAux+=1
+            y+=30
 
         # update all the sprites
         self.game.all.update()
