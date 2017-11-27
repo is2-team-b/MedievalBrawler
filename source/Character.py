@@ -20,7 +20,7 @@ class Character(pygame.sprite.Sprite):
         self.last_shot = 0
         self.last_dir = [1,0]
         self.last_angle = 0
-        self.last_hitbox = (15,65)
+        self.last_projectileHitbox = (15,65)
 
 
     def move(self, keyPress, char):
@@ -30,7 +30,7 @@ class Character(pygame.sprite.Sprite):
                 self.speed = [5, -5]
                 char.last_dir = self.speed
                 char.last_angle = 135
-                char.last_hitbox = (10, 20)
+                char.last_projectileHitbox = (10, 20)
             else:
                 self.speed = [-self.speed[0], -self.speed[1]]
         elif keyPress[pygame.K_LEFT] and keyPress[pygame.K_UP]:
@@ -38,7 +38,7 @@ class Character(pygame.sprite.Sprite):
                 self.speed = [-5, -5]
                 char.last_dir = self.speed
                 char.last_angle = -135
-                char.last_hitbox = (10, 20)
+                char.last_projectileHitbox = (10, 20)
             else:
                 self.speed = [-self.speed[0], -self.speed[1]]
         elif keyPress[pygame.K_LEFT] and keyPress[pygame.K_DOWN]:
@@ -46,7 +46,7 @@ class Character(pygame.sprite.Sprite):
                 self.speed = [-5, 5]
                 char.last_dir = self.speed
                 char.last_angle = -45
-                char.last_hitbox = (10, 20)
+                char.last_projectileHitbox = (10, 20)
             else:
                 self.speed = [-self.speed[0], -self.speed[1]]
         elif keyPress[pygame.K_RIGHT] and keyPress[pygame.K_DOWN]:
@@ -54,7 +54,7 @@ class Character(pygame.sprite.Sprite):
                 self.speed = [5, 5]
                 char.last_dir = self.speed
                 char.last_angle = 45
-                char.last_hitbox = (10, 20)
+                char.last_projectileHitbox = (10, 20)
             else:
                 self.speed = [-self.speed[0], -self.speed[1]]
         elif keyPress[pygame.K_LEFT] and self.rect.left > 0:
@@ -62,7 +62,7 @@ class Character(pygame.sprite.Sprite):
                 self.speed = [-5, 0]
                 char.last_dir = self.speed
                 char.last_angle = -90
-                char.last_hitbox = (15,65)
+                char.last_projectileHitbox = (15,65)
             else:
                 self.speed = [-self.speed[0],-self.speed[1]]
         elif keyPress[pygame.K_RIGHT] and self.rect.right < GameData.Game.get_instance().arenarect.width:
@@ -70,7 +70,7 @@ class Character(pygame.sprite.Sprite):
                 self.speed = [5, 0]
                 char.last_dir = self.speed
                 char.last_angle = 90
-                char.last_hitbox = (15, 65)
+                char.last_projectileHitbox = (15, 65)
             else:
                 self.speed = [-self.speed[0], -self.speed[1]]
         elif keyPress[pygame.K_DOWN] and self.rect.bottom + 10 < GameData.Game.get_instance().arenarect.height:
@@ -78,7 +78,7 @@ class Character(pygame.sprite.Sprite):
                 self.speed = [0, 5]
                 char.last_dir = self.speed
                 char.last_angle = 0
-                char.last_hitbox = (65, 15)
+                char.last_projectileHitbox = (65, 15)
             else:
                 self.speed = [-self.speed[0], -self.speed[1]]
         elif keyPress[pygame.K_UP] and self.rect.top - 7 > 0:
@@ -86,7 +86,7 @@ class Character(pygame.sprite.Sprite):
                 self.speed = [0, -5]
                 char.last_dir = self.speed
                 char.last_angle = 180
-                char.last_hitbox = (65, 15)
+                char.last_projectileHitbox = (65, 15)
             else:
                 self.speed = [-self.speed[0], -self.speed[1]]
         else:
@@ -107,12 +107,12 @@ class Character(pygame.sprite.Sprite):
 
     def shoot(self, time):
         now = time.get_ticks()
-        if now - self.last_shot > 170:
+        if now - self.last_shot > 750:
             self.last_shot = now
             dirProjectile = self.last_dir
             pos = self.rect.center
             angleProjectile = self.last_angle
-            hbProjectile = self.last_hitbox
+            hbProjectile = self.last_projectileHitbox
             projectileChar = self.projectileChar
             Proyectile( pos, dirProjectile, angleProjectile, hbProjectile, projectileChar)
             # Proyectile( pos, dirProjectile)

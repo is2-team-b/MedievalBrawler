@@ -83,7 +83,6 @@ class StateIngameScreen(StateGame, Manager):
         cantEnemigos = 3
         # cantEnemigos = self.game.response.json()['stages'][self.game.index]['numEnemies']
 
-
         if not self.botsCreados:
             for i in range(cantEnemigos):
                 condicionEnemigoCreado = False
@@ -107,12 +106,6 @@ class StateIngameScreen(StateGame, Manager):
         self.game.screen.blit(self.playerCharacter.imageGame, self.playerCharacter.rect)
 
 
-
-
-
-
-
-
     def listen_events(self):
         # get input
         for event in pygame.event.get():
@@ -134,6 +127,12 @@ class StateIngameScreen(StateGame, Manager):
         if pygame.sprite.collide_rect(self.playerCharacter, self.banderaelegida):
             self.condicionVictoria = True
             self.waiting = False
+
+        # logica de bots
+
+
+
+
 
         self.game.step = self.game.step + 1
         if self.game.step > 4:
