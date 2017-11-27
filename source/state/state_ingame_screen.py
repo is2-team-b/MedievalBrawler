@@ -214,7 +214,8 @@ class StateIngameScreen(StateGame, Manager):
         return {'id': json_match['matchId'],
                 'result': result,
                 'status': status,
-                'stages': self.game.stages_to_send}
+                'stages': self.game.stages_to_send,
+                'kills': self.game.kills}
 
     def get_stage_payload(self, json_match, index, result, status):
         return {'id': json_match['stages'][index],
@@ -227,6 +228,7 @@ class StateIngameScreen(StateGame, Manager):
 
         if self.condicionVictoria:
             if self.game.index > 1:
+                self.game.response_final = response
                 self.game.state = StateMatchCompletedScreen(self.game)
         else:
             self.game.state = StateGameOverScreen(self.game)

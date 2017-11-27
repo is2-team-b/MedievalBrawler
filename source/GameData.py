@@ -30,6 +30,7 @@ class Game:
             cls.screenmode = None
             cls.active_screen = None
             cls.response = None
+            cls.response_final = None
             cls.screen = None
             cls.background = None
             cls.music = None
