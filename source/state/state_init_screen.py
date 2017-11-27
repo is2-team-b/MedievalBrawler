@@ -9,7 +9,8 @@ class StateInitScreen(StateGame, Manager):
         StateGame.__init__(self, game)
 
     def listen_events(self):
-        self.game.screenmode = input('(1-2) ')
+        # self.game.screenmode = input('(1-2) ')
+        self.game.screenmode = '2'
 
     def process_logic(self):
         if self.game.screenmode == '1':
