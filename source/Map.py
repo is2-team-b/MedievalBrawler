@@ -9,6 +9,7 @@ class Map:
         self.respawnpoints = respawn_list
         self.enemyrespawnpoints = enemy_respawn_list
 
+##MapManager
 
 class MapManager:
     def __init__(self):
