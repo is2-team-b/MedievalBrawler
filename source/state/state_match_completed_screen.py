@@ -13,6 +13,8 @@ class StateMatchCompletedScreen(StateGame, Manager):
         # Match cleared screen
         self.game.gamestate = "Match completed"
         self.game.active_screen.setImage('game_completed.png')
+        for projectile in self.game.projectiles:
+            projectile.kill()
         self.game.screen.blit(self.game.active_screen.image, self.game.active_screen.rect)
 
         # update all the sprites

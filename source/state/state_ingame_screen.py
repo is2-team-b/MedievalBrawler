@@ -186,8 +186,8 @@ class StateIngameScreen(StateGame, Manager):
             self.render_update()
 
         if self.condicionVictoria:
-            # eliminar proyectiles
-            self.game.projectiles.remove()
+            # # eliminar proyectiles
+            # self.game.projectiles.remove()
             self.game.stages_to_send.append(
                 self.get_stage_payload(self.game.response.json(), self.game.index, 'win', 'complete'))
             self.game.index += 1

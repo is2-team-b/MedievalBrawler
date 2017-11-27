@@ -14,6 +14,8 @@ class StateVictoryScreen(StateGame, Manager):
         # Victory screen
         self.game.gamestate = "Victory"
         self.game.active_screen.setImage('victory_screen.png')
+        for projectile in self.game.projectiles:
+            projectile.kill()
         self.game.screen.blit(self.game.active_screen.image, self.game.active_screen.rect)
 
         # update all the sprites
