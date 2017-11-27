@@ -14,7 +14,7 @@
       <file leaf-file-name="__init__.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/__init__.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="379">
+            <state relative-caret-position="414">
               <caret line="47" column="0" lean-forward="false" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
               <folding />
             </state>
@@ -34,8 +34,8 @@
       <file leaf-file-name="state_ingame_screen.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/source/state/state_ingame_screen.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="88" column="42" lean-forward="true" selection-start-line="88" selection-start-column="42" selection-end-line="88" selection-end-column="42" />
+            <state relative-caret-position="337">
+              <caret line="102" column="69" lean-forward="false" selection-start-line="102" selection-start-column="69" selection-end-line="102" selection-end-column="69" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -46,8 +46,8 @@
       <file leaf-file-name="Map.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/source/Map.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="348">
-              <caret line="30" column="103" lean-forward="true" selection-start-line="30" selection-start-column="103" selection-end-line="30" selection-end-column="103" />
+            <state relative-caret-position="397">
+              <caret line="41" column="58" lean-forward="true" selection-start-line="41" selection-start-column="58" selection-end-line="41" selection-end-column="58" />
               <folding />
             </state>
           </provider>
@@ -64,9 +64,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>dirtyRects</find>
-      <find>RegisterListener(</find>
-      <find>guiClasses</find>
       <find>has_key(key)</find>
       <find>has_key</find>
       <find>character</find>
@@ -94,6 +91,9 @@
       <find>Character</find>
       <find>playerCharacte</find>
       <find>playable_characters</find>
+      <find>len</find>
+      <find>first_render</find>
+      <find>self.game.background</find>
     </findStrings>
     <replaceStrings>
       <replace>my_screens</replace>
@@ -168,8 +168,8 @@
         <option value="$PROJECT_DIR$/source/state/state_char_selection_screen.py" />
         <option value="$PROJECT_DIR$/__init__.py" />
         <option value="$PROJECT_DIR$/source/state/state_victory_screen.py" />
-        <option value="$PROJECT_DIR$/source/state/state_ingame_screen.py" />
         <option value="$PROJECT_DIR$/source/Map.py" />
+        <option value="$PROJECT_DIR$/source/state/state_ingame_screen.py" />
       </list>
     </option>
   </component>
@@ -344,12 +344,12 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32977587" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32735425" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.16755603" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.16542156" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32896462" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3959445" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.39487725" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -385,13 +385,6 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/source/state/state_ingame_screen.py</url>
-          <line>84</line>
-          <option name="timeStamp" value="31" />
-        </line-breakpoint>
-      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">
@@ -399,7 +392,7 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="33" />
+      <option name="time" value="36" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -632,7 +625,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="379">
+        <state relative-caret-position="414">
           <caret line="47" column="0" lean-forward="false" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
           <folding />
         </state>
@@ -648,16 +641,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/source/Map.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="348">
-          <caret line="30" column="103" lean-forward="true" selection-start-line="30" selection-start-column="103" selection-end-line="30" selection-end-column="103" />
+        <state relative-caret-position="397">
+          <caret line="41" column="58" lean-forward="true" selection-start-line="41" selection-start-column="58" selection-end-line="41" selection-end-column="58" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/source/state/state_ingame_screen.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="88" column="42" lean-forward="true" selection-start-line="88" selection-start-column="42" selection-end-line="88" selection-end-column="42" />
+        <state relative-caret-position="337">
+          <caret line="102" column="69" lean-forward="false" selection-start-line="102" selection-start-column="69" selection-end-line="102" selection-end-column="69" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>

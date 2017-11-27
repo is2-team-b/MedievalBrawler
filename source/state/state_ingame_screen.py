@@ -22,13 +22,15 @@ class StateIngameScreen(StateGame, Manager):
         self.payload_to_send = None
         self.time = None
         self.enemiesCharacters = None
+        self.botsCreados = False
+        self.enemiesCreated = []
 
     def init(self):
         # ingame screen
         self.game.gamestate = "in game"
 
         # scenario = self.game.response.json()['stages'][self.game.index]['scenario']
-        scenario = "river.png"
+        scenario = "ocean_wall.png"
 
         self.game.active_screen.setImage(scenario)
 
@@ -64,7 +66,7 @@ class StateIngameScreen(StateGame, Manager):
         # pintar fondo
         self.game.screen.blit(self.game.active_screen.image, self.game.active_screen.rect)
 
-        self.game.background = pygame.Surface(self.game.screenrect.size)
+        # self.game.background = pygame.Surface(self.game.screenrect.size)
 
         for wall in self.game.battleground.walls:
             pygame.draw.rect(self.game.screen, (33, 33, 33), wall, 0)
@@ -77,25 +79,35 @@ class StateIngameScreen(StateGame, Manager):
         # pintar banderas
         self.game.screen.blit(self.banderaelegida.image, self.banderaelegida.rect)
 
+        # pintar/actualizar bots
+        cantEnemigos = 3
+        # cantEnemigos = self.game.response.json()['stages'][self.game.index]['numEnemies']
+
+
+        if not self.botsCreados:
+            for i in range(cantEnemigos):
+                condicionEnemigoCreado = False
+                while not condicionEnemigoCreado:
+                    indiceEnemigoElegido = randint(0,2)
+                    enemyChar = self.enemiesCharacters[indiceEnemigoElegido]
+                    spawnEleg = randint(0, len(self.game.battleground.enemyrespawnpoints)-1)
+                    if self.game.battleground.enemyrespawnpoints[spawnEleg][1] == 0:
+                        self.game.screen.blit(enemyChar.imageGame, self.game.battleground.enemyrespawnpoints[spawnEleg][0] )
+                        self.enemiesCreated.append([enemyChar.imageGame,self.game.battleground.enemyrespawnpoints[spawnEleg][0]])
+
+                        # Se elimina esa opcion de respawnPoint como posibilidad
+                        self.game.battleground.enemyrespawnpoints[spawnEleg][1] = 1
+                        condicionEnemigoCreado = True
+        else:
+            for enemyCreado in self.enemiesCreated:
+                self.game.screen.blit(enemyCreado[0], enemyCreado[1])
+
+        self.botsCreados = True
         # pintar/actualizar jugador
         self.game.screen.blit(self.playerCharacter.imageGame, self.playerCharacter.rect)
 
 
-        # pintar/actualizar bots
-        cantEnemigos = 4
-        # cantEnemigos = self.game.response.json()['stages'][self.game.index]['numEnemies']
 
-        for i in range(cantEnemigos):
-            condicionEnemigoCreado = False
-            while not condicionEnemigoCreado:
-                indiceEnemigoElegido = randint(0,2)
-                enemyChar = self.enemiesCharacters[indiceEnemigoElegido]
-                spawnEleg = randint(0, self.game.battleground.enemyrespawnpoints.length)
-                if self.game.battleground.enemyrespawnpoints[spawnEleg][1] == 0:
-                    self.game.screen.blit(enemyChar.imageGame, self.game.battleground.enemyrespawnpoints[spawnEleg][0] )
-                    # Se elimina esa opcion de respawnPoint como posibilidad
-                    self.game.battleground.enemyrespawnpoints[spawnEleg][1] = 1
-                    condicionEnemigoCreado = True
 
 
 
