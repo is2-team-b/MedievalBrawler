@@ -43,7 +43,7 @@ class StateIngameScreen(StateGame, Manager):
                                            self.game.playable_characters))[0]
 
         # Se definen los enemigos
-        self.enemiesCharacters = self.game.playable_characters
+        self.enemiesCharacters = copy.copy(self.game.playable_characters)
         for charIte in self.enemiesCharacters:
             if charIte.name == self.playerCharacter.name:
                 self.enemiesCharacters.remove(charIte)
