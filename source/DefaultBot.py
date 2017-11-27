@@ -9,31 +9,31 @@ def DefaultBot(character,time):
         if random.random() < 0.5:
             character.moveBot("up",character)
         else:
-            character.shoot(time)
+            character.shoot(time, "bot")
     if 20 < action < 40:
         if random.random() < 0.5:
             character.moveBot("left", character)
         else:
-            character.shoot(time)
+            character.shoot(time, "bot")
     if 40 < action < 60:
         if random.random() < 0.5:
             character.moveBot("right", character)
         else:
 
-            character.shoot(time)
+            character.shoot(time, "bot")
     if 60 < action < 80:
         if random.random() < 0.5:
             character.moveBot("down", character)
         else:
-            character.shoot(time)
+            character.shoot(time, "bot")
     if action == 40:
         for t in range(0, 6):
             character.moveBot("left", character)
-            character.shoot(time)
+            character.shoot(time, "bot")
     if action == 50:
         for t in range(0, 6):
             character.moveBot("right", character)
-            character.shoot(time)
+            character.shoot(time, "bot")
     # if action == 45:
     #     character.moveBot("left", character)
     #     character.shoot(time)

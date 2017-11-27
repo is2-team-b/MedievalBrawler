@@ -125,7 +125,7 @@ class StateIngameScreen(StateGame, Manager):
                 or (keystate[pygame.K_LEFT] and keystate[pygame.K_DOWN]) or (keystate[pygame.K_RIGHT] and keystate[pygame.K_DOWN]):
             self.playerCharacter.move(keystate,self.playerCharacter)
         elif keystate[K_SPACE]:
-            self.playerCharacter.shoot(self.time)
+            self.playerCharacter.shoot(self.time, "player")
 
         # logica cuando agarra la bandera
         if pygame.sprite.collide_rect(self.playerCharacter, self.banderaelegida):
@@ -136,15 +136,24 @@ class StateIngameScreen(StateGame, Manager):
         for enemyChar in self.enemiesCreated:
             DefaultBot(enemyChar,self.time)
 
-        # logica choque proyectilJugador con enemigo
-        for enemyChar in self.enemiesCreated:
-            if pygame.sprite.collide_rect(self.playerCharacter.projectileChar, enemyChar):
-                enemyChar.kill()
-                self.enemigosEliminados += 1
 
-        # logica choque proyectilJugador con enemigo
-        if pygame.sprite.collide_rect(self.playerCharacter, self.banderaelegida):
-
+        for projectile in self.game.projectiles:
+            # logica choque proyectilEnemigo con jugador
+            if projectile.typeChar == "bot":
+                if pygame.sprite.collide_rect(self.playerCharacter,projectile):
+                    if self.playerCharacter.hitpoints == 1:
+                        self.playerCharacter.kill()
+                        self.condicionVictoria = False
+                        self.waiting = False
+                    else:
+                        self.playerCharacter.hitpoints -= 1
+            # logica choque proyectilJugador con enemigo
+            elif projectile.typeChar == "player":
+                for enemyChar in self.enemiesCreated:
+                    if pygame.sprite.collide_rect(enemyChar, projectile):
+                        enemyChar.remove()
+                        self.enemiesCreated.remove(enemyChar)
+                        self.enemigosEliminados += 1
 
         self.game.step = self.game.step + 1
         if self.game.step > 4:
@@ -159,7 +168,7 @@ class StateIngameScreen(StateGame, Manager):
 
         pygame.display.flip()
         # cap the framerate
-        # self.game.clock.tick(int(self.game.response.json()['stages'][self.game.index]['difficulty']))
+        # self.game.clock.tick(self.game.response.json()['stages'][self.game.index]['difficulty'])
         self.game.clock.tick(45)
 
     def show_stage_result_screen(self):
@@ -174,7 +183,7 @@ class StateIngameScreen(StateGame, Manager):
 
         if self.condicionVictoria:
             # eliminar proyectiles
-            self.game.projectiles.kill()
+            self.game.projectiles.remove()
             self.game.stages_to_send.append(
                 self.get_stage_payload(self.game.response.json(), self.game.index, 'win', 'complete'))
             self.game.index += 1

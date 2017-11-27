@@ -24,6 +24,7 @@ class Character(pygame.sprite.Sprite):
         self.last_dir = [1,0]
         self.last_angle = 0
         self.last_projectileHitbox = (15,65)
+        self.hitpoints = 3
 
 
     def move(self, keyPress, char):
@@ -108,7 +109,7 @@ class Character(pygame.sprite.Sprite):
                 return True
         return False
 
-    def shoot(self, time):
+    def shoot(self, time, typeChar):
         now = time.get_ticks()
         if now - self.last_shot > 750:
             self.last_shot = now
@@ -117,7 +118,7 @@ class Character(pygame.sprite.Sprite):
             angleProjectile = self.last_angle
             hbProjectile = self.last_projectileHitbox
             projectileChar = self.projectileChar
-            Proyectile( pos, dirProjectile, angleProjectile, hbProjectile, projectileChar)
+            Proyectile( pos, dirProjectile, angleProjectile, hbProjectile, projectileChar, typeChar)
             # Proyectile( pos, dirProjectile)
             # projectiles.add(charProyectil)
             # return charProyectil.image,charProyectil.rect
