@@ -33,8 +33,8 @@ class StateIngameScreen(StateGame, Manager):
         # ingame screen
         self.game.gamestate = "in game"
 
-        # scenario = self.game.response.json()['stages'][self.game.index]['scenario']
-        scenario = "ocean_wall.png"
+        scenario = self.game.response.json()['stages'][self.game.index]['scenario']
+        # scenario = "ocean_wall.png"
 
         self.game.active_screen.setImage(scenario)
 
@@ -84,8 +84,8 @@ class StateIngameScreen(StateGame, Manager):
         self.game.screen.blit(self.banderaelegida.image, self.banderaelegida.rect)
 
         # pintar/actualizar bots
-        cantEnemigos = 4 + 1
-        # cantEnemigos = self.game.response.json()['stages'][self.game.index]['numEnemies']
+        # cantEnemigos = 4 + 1
+        cantEnemigos = self.game.response.json()['stages'][self.game.index]['numEnemies']
 
         if not self.botsCreados:
             for i in range(cantEnemigos):
@@ -171,8 +171,8 @@ class StateIngameScreen(StateGame, Manager):
 
         pygame.display.flip()
         # cap the framerate
-        # self.game.clock.tick(self.game.response.json()['stages'][self.game.index]['difficulty'])
-        self.game.clock.tick(45)
+        self.game.clock.tick(self.game.response.json()['stages'][self.game.index]['difficulty'])
+        # self.game.clock.tick(45)
 
     def show_stage_result_screen(self):
         self.init()
