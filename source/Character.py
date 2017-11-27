@@ -1,4 +1,7 @@
 import pygame
+import time
+
+from random import random
 from source import Graphics
 from source import GameData
 from source.Projectile import Proyectile
@@ -118,6 +121,65 @@ class Character(pygame.sprite.Sprite):
             # Proyectile( pos, dirProjectile)
             # projectiles.add(charProyectil)
             # return charProyectil.image,charProyectil.rect
+
+    def moveBot(self,direction, char):
+        if direction=="left" and self.rect.left > 0:
+            if not self.collide_with_obstacles():
+                self.speed = [-5, 0]
+                char.last_dir = self.speed
+                char.last_angle = -90
+                char.last_projectileHitbox = (15,65)
+            else:
+                self.speed = [-self.speed[0],-self.speed[1]]
+        elif direction=="right" and self.rect.right < GameData.Game.get_instance().arenarect.width:
+            if not self.collide_with_obstacles():
+                self.speed = [5, 0]
+                char.last_dir = self.speed
+                char.last_angle = 90
+                char.last_projectileHitbox = (15, 65)
+            else:
+                self.speed = [-self.speed[0], -self.speed[1]]
+        elif direction=="down" and self.rect.bottom + 10 < GameData.Game.get_instance().arenarect.height:
+            if not self.collide_with_obstacles():
+                self.speed = [0, 5]
+                char.last_dir = self.speed
+                char.last_angle = 0
+                char.last_projectileHitbox = (65, 15)
+            else:
+                self.speed = [-self.speed[0], -self.speed[1]]
+        elif direction=="up" and self.rect.top - 7 > 0:
+            if not self.collide_with_obstacles():
+                self.speed = [0, -5]
+                char.last_dir = self.speed
+                char.last_angle = 180
+                char.last_projectileHitbox = (65, 15)
+            else:
+                self.speed = [-self.speed[0], -self.speed[1]]
+        else:
+            self.speed = [0, 0]
+
+        # Mover en base a posición actual y velocidad.
+        # por random segundos
+        # segundos =  randint(1,4)
+        #
+        # timeout = time.time() + segundos   # 5 minutes from now
+        # while True:
+        #     if time.time() > timeout:
+        #         break
+
+
+        # t = time.time()
+        # while True:
+        #     if time.time() > t + 3:
+        #         # t = time.time()
+        #         self.rect.move_ip(self.speed)
+        #         break
+        self.rect.move_ip(self.speed)
+        self.rect.move_ip(self.speed)
+        self.rect.move_ip(self.speed)
+
+
+
 
 
 

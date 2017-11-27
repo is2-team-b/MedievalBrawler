@@ -1,6 +1,7 @@
 import pygame
 import curio
 import asks
+import copy
 
 from random import randint
 from source.state.state_game import StateGame
@@ -10,6 +11,7 @@ from source.state.state_match_completed_screen import StateMatchCompletedScreen
 from source.state.state_game_over_screen import StateGameOverScreen
 from source.Flag import Flag
 from source.Map import *
+from source.DefaultBot import DefaultBot
 
 class StateIngameScreen(StateGame, Manager):
     def __init__(self, game):
@@ -24,6 +26,7 @@ class StateIngameScreen(StateGame, Manager):
         self.enemiesCharacters = None
         self.botsCreados = False
         self.enemiesCreated = []
+        self.enemigosEliminados = 0
 
     def init(self):
         # ingame screen
@@ -80,7 +83,7 @@ class StateIngameScreen(StateGame, Manager):
         self.game.screen.blit(self.banderaelegida.image, self.banderaelegida.rect)
 
         # pintar/actualizar bots
-        cantEnemigos = 3
+        cantEnemigos = 4 + 1
         # cantEnemigos = self.game.response.json()['stages'][self.game.index]['numEnemies']
 
         if not self.botsCreados:
@@ -88,18 +91,19 @@ class StateIngameScreen(StateGame, Manager):
                 condicionEnemigoCreado = False
                 while not condicionEnemigoCreado:
                     indiceEnemigoElegido = randint(0,2)
-                    enemyChar = self.enemiesCharacters[indiceEnemigoElegido]
+                    enemyChar = copy.copy(self.enemiesCharacters[indiceEnemigoElegido])
                     spawnEleg = randint(0, len(self.game.battleground.enemyrespawnpoints)-1)
                     if self.game.battleground.enemyrespawnpoints[spawnEleg][1] == 0:
                         self.game.screen.blit(enemyChar.imageGame, self.game.battleground.enemyrespawnpoints[spawnEleg][0] )
-                        self.enemiesCreated.append([enemyChar.imageGame,self.game.battleground.enemyrespawnpoints[spawnEleg][0]])
+                        enemyChar.rect = self.game.battleground.enemyrespawnpoints[spawnEleg][0]
+                        self.enemiesCreated.append(enemyChar)
 
                         # Se elimina esa opcion de respawnPoint como posibilidad
                         self.game.battleground.enemyrespawnpoints[spawnEleg][1] = 1
                         condicionEnemigoCreado = True
         else:
             for enemyCreado in self.enemiesCreated:
-                self.game.screen.blit(enemyCreado[0], enemyCreado[1])
+                self.game.screen.blit(enemyCreado.imageGame, enemyCreado.rect)
 
         self.botsCreados = True
         # pintar/actualizar jugador
@@ -129,9 +133,17 @@ class StateIngameScreen(StateGame, Manager):
             self.waiting = False
 
         # logica de bots
+        for enemyChar in self.enemiesCreated:
+            DefaultBot(enemyChar,self.time)
 
+        # logica choque proyectilJugador con enemigo
+        for enemyChar in self.enemiesCreated:
+            if pygame.sprite.collide_rect(self.playerCharacter.projectileChar, enemyChar):
+                enemyChar.kill()
+                self.enemigosEliminados += 1
 
-
+        # logica choque proyectilJugador con enemigo
+        if pygame.sprite.collide_rect(self.playerCharacter, self.banderaelegida):
 
 
         self.game.step = self.game.step + 1
@@ -161,6 +173,8 @@ class StateIngameScreen(StateGame, Manager):
             self.render_update()
 
         if self.condicionVictoria:
+            # eliminar proyectiles
+            self.game.projectiles.kill()
             self.game.stages_to_send.append(
                 self.get_stage_payload(self.game.response.json(), self.game.index, 'win', 'complete'))
             self.game.index += 1
