@@ -24,7 +24,7 @@ class Character(pygame.sprite.Sprite):
         self.last_dir = [1,0]
         self.last_angle = 0
         self.last_projectileHitbox = (15,65)
-        self.hitpoints = 3
+        self.hitpoints = 15
 
 
     def move(self, keyPress, char):

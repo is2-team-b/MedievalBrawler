@@ -12,6 +12,7 @@ from source.state.state_game_over_screen import StateGameOverScreen
 from source.Flag import Flag
 from source.Map import *
 from source.DefaultBot import DefaultBot
+from source.Text import draw_text
 
 class StateIngameScreen(StateGame, Manager):
     def __init__(self, game):
@@ -53,7 +54,7 @@ class StateIngameScreen(StateGame, Manager):
         self.game.battleground = list(filter(lambda mapa: mapa.background == scenario, map_manager.maps))[0]
 
         self.playerCharacter_rect = Rect(self.game.battleground.respawnpoints[0],
-                                         self.game.battleground.respawnpoints[1], 60, 40)
+                                         self.game.battleground.respawnpoints[1], 20, 20)
 
         self.playerCharacter.rect = self.playerCharacter_rect
 
@@ -154,6 +155,8 @@ class StateIngameScreen(StateGame, Manager):
                         enemyChar.remove()
                         self.enemiesCreated.remove(enemyChar)
                         self.enemigosEliminados += 1
+
+        draw_text(self.game.screen , str("Puntaje: " + str(self.enemigosEliminados)),self.game.width / 2 , 10)
 
         self.game.step = self.game.step + 1
         if self.game.step > 4:
