@@ -20,19 +20,28 @@ class StateIngameScreen(StateGame, Manager):
         self.condicionVictoria = None
         self.payload_to_send = None
         self.time = None
+        self.enemiesCharacters = None
 
     def init(self):
         # ingame screen
         self.game.gamestate = "in game"
 
-        scenario = self.game.response.json()['stages'][self.game.index]['scenario']
-        # scenario = "river.png"
+        # scenario = self.game.response.json()['stages'][self.game.index]['scenario']
+        scenario = "river.png"
 
         self.game.active_screen.setImage(scenario)
 
         # get char elegido
         self.playerCharacter = list(filter(lambda char: char.name == self.game.player_character,
                                            self.game.playable_characters))[0]
+
+        # Se definen los enemigos
+        self.enemiesCharacters = self.game.playable_characters
+        for charIte in self.enemiesCharacters:
+            if charIte.name ==  self.playerCharacter.name:
+                self.enemiesCharacters.remove(charIte)
+
+
 
         # get mapa elegido
         map_manager = MapManager()
@@ -72,6 +81,14 @@ class StateIngameScreen(StateGame, Manager):
         # pintar/actualizar jugador
         self.game.screen.blit(self.playerCharacter.imageGame, self.playerCharacter.rect)
 
+        # pintar/actualizar bots
+        cantEnemigos = 4
+        # cantEnemigos = self.game.response.json()['stages'][self.game.index]['numEnemies']
+        for i in range(cantEnemigos):
+            for enemyChar in 
+            self.game.screen.blit(self.enemiesCharacters.imageGame, self.playerCharacter.rect)
+
+
     def listen_events(self):
         # get input
         for event in pygame.event.get():
@@ -107,8 +124,8 @@ class StateIngameScreen(StateGame, Manager):
 
         pygame.display.flip()
         # cap the framerate
-        self.game.clock.tick(int(self.game.response.json()['stages'][self.game.index]['difficulty']))
-        # self.game.clock.tick(45)
+        # self.game.clock.tick(int(self.game.response.json()['stages'][self.game.index]['difficulty']))
+        self.game.clock.tick(45)
 
     def show_stage_result_screen(self):
         self.init()
