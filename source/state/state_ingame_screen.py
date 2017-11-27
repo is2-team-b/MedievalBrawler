@@ -202,7 +202,7 @@ class StateIngameScreen(StateGame, Manager):
     async def fetch(self, result, status):
         dict_to_send = self.get_user_payload(self.game.response.json(), result, status)
         task = await curio.spawn(asks.put('https://team-b-api.herokuapp.com/api/login/'
-                                          + self.game.response.json()['loginId'] + '/', json=dict_to_send, timeout=1))
+                                          + self.game.response.json()['loginId'] + '/', json=dict_to_send, timeout=5000))
         await self.on_response_received(await task.join())
 
     def get_user_payload(self, json_match, result, status):
@@ -218,7 +218,7 @@ class StateIngameScreen(StateGame, Manager):
                 'kills': self.game.kills}
 
     def get_stage_payload(self, json_match, index, result, status):
-        return {'id': json_match['stages'][index],
+        return {'id': json_match['stages'][index]['id'],
                 'result': result,
                 'status': status}
 

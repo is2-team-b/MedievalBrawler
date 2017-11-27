@@ -20,12 +20,13 @@ class StateMatchCompletedScreen(StateGame, Manager):
 
         # pintar Puntajes
         num_player_aux = 1
-        y = 500
-        for user in self.game.response.json()['users']:
-            draw_text(self.game.screen, str(num_player_aux + user['name']), 500, y)
-            draw_text(self.game.screen, user['maxKills'], 730, y)
-            num_player_aux+=1
-            y+=30
+        y = 350
+        if 'users' in self.game.response_final.json():
+            for user in self.game.response_final.json()['users']:
+                draw_text(self.game.screen, str(num_player_aux) + '. ' + user['name'][:18], 530, y)
+                draw_text(self.game.screen, str(user['maxKills']), 760, y)
+                num_player_aux+=1
+                y+=30
 
         # update all the sprites
         self.game.all.update()

@@ -131,7 +131,7 @@ class StateCharSelectionScreen(StateGame, Manager):
         self.game.user_name = self.textinput.get_text()
         dict_to_send = {'userName': self.game.user_name, 'characterName': self.char_name}
         task = await curio.spawn(asks.post('https://team-b-api.herokuapp.com/api/login/',
-                                           json=dict_to_send, timeout=1))
+                                           json=dict_to_send, timeout=5000))
         await self.on_response_received(await task.join())
 
     async def on_response_received(self, response):
