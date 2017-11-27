@@ -27,7 +27,6 @@ class StateIngameScreen(StateGame, Manager):
         self.enemiesCharacters = None
         self.botsCreados = False
         self.enemiesCreated = []
-        self.kills = 0
 
     def init(self):
         # ingame screen
@@ -155,9 +154,9 @@ class StateIngameScreen(StateGame, Manager):
                         enemyChar.remove()
                         projectile.kill()
                         self.enemiesCreated.remove(enemyChar)
-                        self.kills += 1
+                        self.game.kills += 1
 
-        draw_text(self.game.screen , str("Puntaje: " + str(self.kills)),self.game.width / 2 , 10)
+        draw_text(self.game.screen , str("Puntaje: " + str(self.game.kills)),self.game.width / 2 , 10)
 
         self.game.step = self.game.step + 1
         if self.game.step > 4:

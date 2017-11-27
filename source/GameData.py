@@ -35,6 +35,7 @@ class Game:
             cls.music = None
             cls.clock = pygame.time.Clock()
             cls.step = None
+            cls.kills = 0
 
             cls.my_screens = None
             cls.boxes = None
