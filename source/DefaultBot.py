@@ -48,15 +48,14 @@ def DefaultBot(character,time):
     for wall in GameData.Game.get_instance().battleground.walls:
         if wall.colliderect(character.rect):
             if random.random() < 0.5:
-                for i in range(0, int(random.random() * 250 )):
+                for i in range(0, int(random.random() * 10 )):
                     character.moveBot("left", character)
-                    character.shoot(time)
+                    character.shoot(time,"bot")
                 # tank.command_queue.append("flush")
             else:
-                for i in range(0, int(random.random() * 250 )):
+                for i in range(0, int(random.random() * 10 )):
                     character.moveBot("right", character)
-                    character.shoot(time)
-                # tank.command_queue.append("flush")
+                    character.shoot(time, "bot")
 
     # # Avoid water in a random direction
     # for pool in GameData.Game.get_instance().battleground.water:

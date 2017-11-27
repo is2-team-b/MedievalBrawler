@@ -153,6 +153,7 @@ class StateIngameScreen(StateGame, Manager):
                 for enemyChar in self.enemiesCreated:
                     if pygame.sprite.collide_rect(enemyChar, projectile):
                         enemyChar.remove()
+                        projectile.kill()
                         self.enemiesCreated.remove(enemyChar)
                         self.enemigosEliminados += 1
 
