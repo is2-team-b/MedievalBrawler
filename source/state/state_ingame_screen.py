@@ -2,6 +2,7 @@ import pygame
 import curio
 import asks
 
+from random import randint
 from source.state.state_game import StateGame
 from source.manager import Manager
 from source.state.state_victory_screen import StateVictoryScreen
@@ -38,10 +39,8 @@ class StateIngameScreen(StateGame, Manager):
         # Se definen los enemigos
         self.enemiesCharacters = self.game.playable_characters
         for charIte in self.enemiesCharacters:
-            if charIte.name ==  self.playerCharacter.name:
+            if charIte.name == self.playerCharacter.name:
                 self.enemiesCharacters.remove(charIte)
-
-
 
         # get mapa elegido
         map_manager = MapManager()
@@ -81,12 +80,25 @@ class StateIngameScreen(StateGame, Manager):
         # pintar/actualizar jugador
         self.game.screen.blit(self.playerCharacter.imageGame, self.playerCharacter.rect)
 
+
         # pintar/actualizar bots
         cantEnemigos = 4
         # cantEnemigos = self.game.response.json()['stages'][self.game.index]['numEnemies']
+
         for i in range(cantEnemigos):
-            for enemyChar in 
-            self.game.screen.blit(self.enemiesCharacters.imageGame, self.playerCharacter.rect)
+            condicionEnemigoCreado = False
+            while not condicionEnemigoCreado:
+                indiceEnemigoElegido = randint(0,2)
+                enemyChar = self.enemiesCharacters[indiceEnemigoElegido]
+                spawnEleg = randint(0, self.game.battleground.enemyrespawnpoints.length)
+                if self.game.battleground.enemyrespawnpoints[spawnEleg][1] == 0:
+                    self.game.screen.blit(enemyChar.imageGame, self.game.battleground.enemyrespawnpoints[spawnEleg][0] )
+                    # Se elimina esa opcion de respawnPoint como posibilidad
+                    self.game.battleground.enemyrespawnpoints[spawnEleg][1] = 1
+                    condicionEnemigoCreado = True
+
+
+
 
 
     def listen_events(self):

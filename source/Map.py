@@ -1,13 +1,13 @@
 from pygame.locals import *
 
 class Map:
-    def __init__(self, name, background, walls_list, water_list, respawn_list, flag_respawn_list):
+    def __init__(self, name, background, walls_list, water_list, respawn_list, enemy_respawn_list):
         self.name = name  # name as displayed in the options screen
         self.background = background  # file with background picture
         self.walls = walls_list  # a list of Rect() objects
         self.water = water_list  # a list of Rect() objects
         self.respawnpoints = respawn_list
-        self.flagrespawnpoints = flag_respawn_list
+        self.enemyrespawnpoints = enemy_respawn_list
 
 
 class MapManager:
@@ -26,7 +26,7 @@ class MapManager:
                               Rect(1152, 0, 168, 82),Rect(1152, 82, 112, 28),Rect(870, 39, 282, 85),
                               Rect(850, 58, 20, 66),Rect(814, 86, 36, 38)],
                               (50,150),
-                              []),
+                              [[Rect(652,28,60,40),0],[Rect(250,250,60,40),0]]),
                      Map("Ocean Wall", "ocean_wall.png",
                              [Rect(181, 246, 159, 24), Rect(310, 246, 27, 97), Rect(179, 246, 25, 103),
                               Rect(1279, 629, 41, 73), Rect(631, 682, 21, 80),Rect(592, 725, 60, 37), Rect(723, 683, 18, 78), Rect(741, 694, 29, 69),
@@ -37,7 +37,9 @@ class MapManager:
                              [Rect(1, 218, 101, 380), Rect(74, 225, 81, 353),Rect(148, 201, 226, 23), Rect(364, 210, 39, 165), Rect(321, 377, 355, 142),
                               Rect(488, 203, 101, 31), Rect(448, 81, 72, 120), Rect(498, 56, 201, 33), Rect(692, 4, 158, 53)],
                              (238,298),
-                             [])]
+                             [[Rect(222,281,60,40),0],[Rect(33,705,60,40),0],
+                              [Rect(606,251,50,40),0],[Rect(661,695,50,40),0],
+                              [Rect(1216, 8, 60, 40), 0]])]
 
-    # def getMapByFilename(self,Name):
-    #     return (mapa for mapa in self.maps if mapa.background == Name)[0]
+    def getMapByFilename(self,Name):
+         self.maps
