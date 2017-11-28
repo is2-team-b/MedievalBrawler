@@ -22,4 +22,4 @@ class TestDefaultBot(unittest.TestCase):
         DefaultBot(character_bot, pygame.time)
         is_moving = character_bot.last_angle == 0 or character_bot.last_angle == 180 \
                     or character_bot.last_angle == 90 or character_bot.last_angle == -90
-        self.assertTrue(is_moving, 'Operacion mover izquierda incorrecta')
+        self.assertTrue(is_moving, 'Operacion mover bot por default incorrecta')
