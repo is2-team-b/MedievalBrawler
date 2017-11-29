@@ -21,19 +21,10 @@ class TestCharacter(unittest.TestCase):
         source.GameData.Game.get_instance().screen.blit(source.GameData.Game.get_instance().background, (0, 0))
         pygame.display.flip()
 
-        source.GameData.Game.get_instance().my_screens = pygame.sprite.Group()
         source.GameData.Game.get_instance().characters = pygame.sprite.Group()
-        source.GameData.Game.get_instance().projectiles = pygame.sprite.Group()
         source.GameData.Game.get_instance().all = pygame.sprite.RenderUpdates()
 
-        MyScreen.containers = source.GameData.Game.get_instance().my_screens, source.GameData.Game.get_instance().all
         Character.containers = source.GameData.Game.get_instance().characters, source.GameData.Game.get_instance().all
-        Proyectile.containers = source.GameData.Game.get_instance().projectiles, source.GameData.Game.get_instance().all
-
-        source.GameData.Game.get_instance().active_screen = MyScreen('splash_screen_done.png')
-        source.GameData.Game.get_instance().screen.blit(source.GameData.Game.get_instance().active_screen.image,
-                                                        source.GameData.Game.get_instance().active_screen.rect)
-        pygame.display.update()
 
         self.left_key = pygame.K_LEFT
         self.right_key = pygame.K_RIGHT

@@ -12,12 +12,12 @@ class Character(pygame.sprite.Sprite):
     def __init__(self, name, image, rect, imageGame, projectileChar):
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.name = name
-        self.image = Graphics.load_image(image)
-        self.image = pygame.transform.scale(self.image, (rect.width, rect.height))
-        # Se añadio un atributo que guarda el sprite para el juego SPRINT3
-        self.imageGame = Graphics.load_image(imageGame)
-        self.imageGame = pygame.transform.scale(self.imageGame, (60, 80))
-        self.projectileChar = Graphics.load_image(projectileChar)
+        # self.image = Graphics.load_image(image)
+        # self.image = pygame.transform.scale(self.image, (rect.width, rect.height))
+        # # Se añadio un atributo que guarda el sprite para el juego SPRINT3
+        # self.imageGame = Graphics.load_image(imageGame)
+        # self.imageGame = pygame.transform.scale(self.imageGame, (60, 80))
+        # self.projectileChar = Graphics.load_image(projectileChar)
         self.rect = rect
         self.speed = [0, 0]
         self.last_shot = 0
@@ -101,12 +101,12 @@ class Character(pygame.sprite.Sprite):
 
 
     def collide_with_obstacles(self):
-        for wall in GameData.Game.get_instance().battleground.walls:
-            if wall.colliderect(self.rect):
-                return True
-        for pool in GameData.Game.get_instance().battleground.water:
-            if pool.colliderect(self.rect):
-                return True
+        # for wall in GameData.Game.get_instance().battleground.walls:
+        #     if wall.colliderect(self.rect):
+        #         return True
+        # for pool in GameData.Game.get_instance().battleground.water:
+        #     if pool.colliderect(self.rect):
+        #         return True
         return False
 
     def shoot(self, time, typeChar):
@@ -117,8 +117,8 @@ class Character(pygame.sprite.Sprite):
             pos = self.rect.center
             angleProjectile = self.last_angle
             hbProjectile = self.last_projectileHitbox
-            projectileChar = self.projectileChar
-            Proyectile( pos, dirProjectile, angleProjectile, hbProjectile, projectileChar, typeChar)
+            # projectileChar = self.projectileChar
+            # Proyectile( pos, dirProjectile, angleProjectile, hbProjectile, projectileChar, typeChar)
             # Proyectile( pos, dirProjectile)
             # projectiles.add(charProyectil)
             # return charProyectil.image,charProyectil.rect
