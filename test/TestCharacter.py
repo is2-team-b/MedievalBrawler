@@ -26,10 +26,33 @@ class TestCharacter(unittest.TestCase):
 
         Character.containers = source.GameData.Game.get_instance().characters, source.GameData.Game.get_instance().all
 
-        self.left_key = pygame.K_LEFT
-        self.right_key = pygame.K_RIGHT
-        self.up_key = pygame.K_UP
-        self.down_key = pygame.K_DOWN
+        # True el indice 276 pygame.K_LEFT
+        self.left_key = [False, False, False, False, False, False, False, False, False, False, False, False, False,
+                         False, False, False, False, False, False, False, False, False, False, False, False, False,
+                         False, False, False, False, False, False, False, False, False, False, False, False, False,
+                         False, False, False, False, False, False, False, False, False, False, False, False, False,
+                         False, False, False, False, False, False, False, False, False, False, False, False, False,
+                         False, False, False, False, False, False, False, False, False, False, False, False, False,
+                         False, False, False, False, False, False, False, False, False, False, False, False, False,
+                         False, False, False, False, False, False, False, False, False, False, False, False, False,
+                         False, False, False, False, False, False, False, False, False, False, False, False, False,
+                         False, False, False, False, False, False, False, False, False, False, False, False, False,
+                         False, False, False, False, False, False, False, False, False, False, False, False, False,
+                         False, False, False, False, False, False, False, False, False, False, False, False, False,
+                         False, False, False, False, False, False, False, False, False, False, False, False, False,
+                         False, False, False, False, False, False, False, False, False, False, False, False, False,
+                         False, False, False, False, False, False, False, False, False, False, False, False, False,
+                         False, False, False, False, False, False, False, False, False, False, False, False, False,
+                         False, False, False, False, False, False, False, False, False, False, False, False, False,
+                         False, False, False, False, False, False, False, False, False, False, False, False, False,
+                         False, False, False, False, False, False, False, False, False, False, False, False, False,
+                         False, False, False, False, False, False, False, False, False, False, False, False, False,
+                         False, False, False, False, False, False, False, False, False, False, False, False, False,
+                         False, False, False, True, False, False, False, False, False, False, False, False, False,
+                         False, False, False, False, False, False, False, False, False, False, False, False, False,
+                         False, False, False, False, False, False, False, False, False, False, False, False, False,
+                         False, False, False, False, False, False, False, False, False, False, False, False, False,
+                         False, False, False, False, False, False, False, False, False, False, False, False, False]
 
         # Posibles valores de last_angle
         # Mover izquierda: -90
