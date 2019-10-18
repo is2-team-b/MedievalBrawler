@@ -13,7 +13,7 @@ public==0.0.38
 pygame==1.9.3
 pytz==2017.2
 query-string==0.0.12
-requests==2.18.4
+requests==2.20.0
 setupfiles==0.0.50
 urllib3==1.22
 yarl==0.14.0
