@@ -3,7 +3,7 @@ async-generator==1.8
 certifi==2017.7.27.1
 chardet==3.0.4
 curio==0.8
-Django==1.11.5
+Django==1.11.23
 get==0.0.21
 h11==0.7.0
 idna==2.6
